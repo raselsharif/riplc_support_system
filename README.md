@@ -1,6 +1,6 @@
 # Support Management System
 
-A full-stack Support Management System with multi-department workflow routing, role-based access control, and approval workflows.
+A full-stack Support Management System with multi-department workflow routing, role-based access control, and approval workflows built with React and Node.js.
 
 ---
 
@@ -26,8 +26,8 @@ A full-stack Support Management System with multi-department workflow routing, r
 
 ### Ticket Status Flow
 `Open` → `Pending` → `Approved` → `Open (in IT)` → `Closed`
-           ↓
-        `Rejected` → `Closed`
+            ↓
+         `Rejected` → `Closed`
 
 ---
 
@@ -35,13 +35,13 @@ A full-stack Support Management System with multi-department workflow routing, r
 
 ### Frontend
 - React 18 (Vite)
-- React Router
-- Axios
-- Tailwind CSS
-- date-fns
+- React Router v6
+- Axios for HTTP requests
+- Tailwind CSS for styling
+- date-fns for date formatting
 
 ### Backend
-- Node.js + Express
+- Node.js + Express.js
 - JWT Authentication
 - Zod Validation
 - Multer (file uploads)
@@ -49,6 +49,14 @@ A full-stack Support Management System with multi-department workflow routing, r
 
 ### Database
 - MySQL
+
+---
+
+## Prerequisites
+
+- Node.js 18+
+- MySQL 8.0+
+- npm or yarn
 
 ---
 
@@ -62,39 +70,50 @@ support_system/
 │   │   └── database.js
 │   ├── controllers/
 │   │   ├── AuthController.js
+│   │   ├── BrandBarController.js
+│   │   ├── ContactController.js
 │   │   ├── DashboardController.js
 │   │   ├── LookupController.js
+│   │   ├── NoticeController.js
 │   │   ├── TicketController.js
-│   │   └── UserController.js
+│   │   ├── UserController.js
+│   │   └── ActivityLogController.js
+│   │   ├── MessageController.js
 │   ├── middleware/
 │   │   ├── auth.js
+│   │   ├── ipMiddleware.js
 │   │   ├── role.js
 │   │   ├── upload.js
 │   │   └── validation.js
-│   ├── models/
-│   │   ├── Approval.js
-│   │   ├── Attachment.js
-│   │   ├── Branch.js
-│   │   ├── Department.js
-│   │   ├── Message.js
-│   │   ├── StatusHistory.js
-│   │   ├── Ticket.js
-│   │   └── User.js
 │   ├── routes/
+│   │   ├── activityLogs.js
 │   │   ├── auth.js
+│   │   ├── brandbar.js
+│   │   ├── contacts.js
 │   │   ├── dashboard.js
+│   │   ├── knowledgeBase.js
 │   │   ├── lookups.js
+│   │   ├── messages.js
+│   │   ├── notices.js
 │   │   ├── tickets.js
+│   │   ├── twoFactor.js
 │   │   └── users.js
 │   ├── services/
+│   │   ├── ActivityLogService.js
 │   │   ├── AttachmentService.js
 │   │   ├── AuthService.js
+│   │   ├── BrandBarService.js
+│   │   ├── MessageService.js
+│   │   ├── NoticeService.js
 │   │   ├── TicketService.js
+│   │   ├── TypingService.js
 │   │   └── UserService.js
 │   ├── utils/
-│   │   └── dbInit.js
+│   │   ├── dbInit.js
+│   │   └── ipHelper.js
 │   ├── database/
 │   │   └── schema.sql
+│   ├── scripts/
 │   ├── src/
 │   │   └── index.js
 │   ├── .env
@@ -103,47 +122,12 @@ support_system/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Filters.jsx
-│   │   │   ├── LoadingSpinner.jsx
-│   │   │   ├── Sidebar.jsx
-│   │   │   ├── StatusBadge.jsx
-│   │   │   ├── TicketTable.jsx
-│   │   │   └── UploadField.jsx
 │   │   ├── contexts/
-│   │   │   └── AuthContext.jsx
+│   │   ├── hooks/
 │   │   ├── layouts/
-│   │   │   ├── AdminLayout.jsx
-│   │   │   ├── ItLayout.jsx
-│   │   │   ├── OfficerLayout.jsx
-│   │   │   └── UserLayout.jsx
 │   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── admin/
-│   │   │   │   ├── AllTickets.jsx
-│   │   │   │   ├── BranchList.jsx
-│   │   │   │   ├── BranchTickets.jsx
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── TicketDetails.jsx
-│   │   │   │   └── UsersList.jsx
-│   │   │   ├── it/
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── Tickets.jsx
-│   │   │   │   └── TicketDetails.jsx
-│   │   │   ├── mis/
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── Tickets.jsx
-│   │   │   │   └── TicketDetails.jsx
-│   │   │   ├── underwriting/
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── Tickets.jsx
-│   │   │   │   └── TicketDetails.jsx
-│   │   │   └── user/
-│   │   │       ├── CreateTicket.jsx
-│   │   │       ├── Dashboard.jsx
-│   │   │       ├── MyTickets.jsx
-│   │   │       └── TicketDetails.jsx
 │   │   ├── services/
-│   │   │   └── api.js
+│   │   ├── utils/
 │   │   ├── App.jsx
 │   │   ├── index.css
 │   │   └── main.jsx
@@ -158,20 +142,96 @@ support_system/
 
 ---
 
-## Database Schema
+## Getting Started
 
-### Tables
+### 1. Clone the repository
 
-| Table | Description |
-|-------|-------------|
-| `departments` | IT, Underwriting, MIS |
-| `branches` | Head Office, Dhaka Central, etc. |
-| `users` | All system users with roles |
-| `tickets` | Main ticket storage |
-| `ticket_messages` | Thread messages |
-| `ticket_attachments` | Cloudinary file references |
-| `ticket_approvals` | Approval workflow records |
-| `ticket_status_history` | Audit trail |
+```bash
+git clone <repository-url>
+cd support_system
+```
+
+### 2. Database Setup
+
+```bash
+cd backend
+
+# Create database and import schema
+mysql -u root -p < database/schema.sql
+
+# Or use the initialization script
+node utils/dbInit.js
+```
+
+### 3. Backend Setup
+
+```bash
+cd backend
+npm install
+```
+
+Create `.env` file in `backend/` directory:
+
+```env
+# Server
+PORT=5000
+NODE_ENV=development
+
+# Database
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=support_system
+
+# JWT
+JWT_SECRET=your_secret_key
+JWT_EXPIRES_IN=7d
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+Start the backend server:
+
+```bash
+# Development
+npm run dev
+
+# Production
+npm start
+```
+
+### 4. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
+
+---
+
+## Environment Variables
+
+### Backend (.env)
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port | 5000 |
+| `NODE_ENV` | Environment | development |
+| `DB_HOST` | MySQL host | localhost |
+| `DB_USER` | MySQL username | root |
+| `DB_PASSWORD` | MySQL password | - |
+| `DB_NAME` | Database name | support_system |
+| `JWT_SECRET` | JWT signing secret | - |
+| `JWT_EXPIRES_IN` | JWT expiry | 7d |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | - |
+| `CLOUDINARY_API_KEY` | Cloudinary API key | - |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret | - |
 
 ---
 
@@ -181,6 +241,8 @@ support_system/
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/login` | User login |
+| POST | `/api/auth/register` | User registration |
+| POST | `/api/auth/logout` | User logout |
 
 ### Users (Admin Only)
 | Method | Endpoint | Description |
@@ -196,10 +258,10 @@ support_system/
 | POST | `/api/tickets` | Create ticket |
 | GET | `/api/tickets` | List tickets |
 | GET | `/api/tickets/:id` | Get ticket details |
-| PATCH | `/api/tickets/:id/status` | Update status (IT only) |
+| PATCH | `/api/tickets/:id/status` | Update status |
 | POST | `/api/tickets/:id/reply` | Add message |
-| POST | `/api/tickets/:id/approve` | Approve (UW/MIS only) |
-| POST | `/api/tickets/:id/reject` | Reject (UW/MIS only) |
+| POST | `/api/tickets/:id/approve` | Approve (UW/MIS) |
+| POST | `/api/tickets/:id/reject` | Reject (UW/MIS) |
 | POST | `/api/tickets/:id/upload` | Upload attachment |
 
 ### Dashboard (Admin Only)
@@ -213,69 +275,6 @@ support_system/
 |--------|----------|-------------|
 | GET | `/api/lookups/departments` | List departments |
 | GET | `/api/lookups/branches` | List branches |
-
----
-
-## Setup Instructions
-
-### 1. Database Setup
-
-```bash
-cd backend
-
-# Create database and tables
-mysql -u root -p < database/schema.sql
-
-# Or use the initialization script
-node utils/dbInit.js
-```
-
-### 2. Backend Setup
-
-```bash
-cd backend
-npm install
-```
-
-Update `.env` file:
-```env
-PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=support_system
-JWT_SECRET=your_secret_key
-JWT_EXPIRES_IN=7d
-
-# Cloudinary Configuration
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-Start server:
-```bash
-npm run dev
-```
-
-### 3. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
----
-
-## Cloudinary Setup
-
-1. Create account at [cloudinary.com](https://cloudinary.com)
-2. Get your credentials from Dashboard
-3. Update `.env` with:
-   - CLOUDINARY_CLOUD_NAME
-   - CLOUDINARY_API_KEY
-   - CLOUDINARY_API_SECRET
 
 ---
 
@@ -329,3 +328,9 @@ npm run dev
 - **Status Badges**: Color-coded status indicators
 - **Chat UI**: Thread-style message display
 - **Approval Actions**: Approve/Reject with remarks
+
+---
+
+## License
+
+MIT License
