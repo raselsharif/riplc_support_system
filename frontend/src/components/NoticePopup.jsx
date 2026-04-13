@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { noticeService } from "../services/api";
 import { format, parseISO, isBefore, startOfDay } from "date-fns";
 import { useAuth } from "../contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const POLL_INTERVAL = 15000;
 
@@ -67,38 +68,56 @@ const NoticePopup = () => {
   const isAllowed = user?.role === "admin" || user?.role === "it";
 
   return (
-    <>
-      {previewImage && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setPreviewImage(null)}
-        >
-          <button
-            className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+    <AnimatePresence>
+      {show && notice && (
+        <>
+          <motion.div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={() => setPreviewImage(null)}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          <div className="max-w-[95vw] max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={previewImage}
-              alt="Preview"
-              className="max-w-[95vw] max-h-[95vh] object-contain"
-            />
-          </div>
-        </div>
-      )}
+            <button
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+              onClick={() => setPreviewImage(null)}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <motion.div 
+              className="max-w-[95vw] max-h-[95vh]"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="max-w-[95vw] max-h-[95vh] object-contain"
+              />
+            </motion.div>
+          </motion.div>
 
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        onClick={handleClose}
-      >
-        <div
-          className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden animate-in flex flex-col max-h-[90vh] border border-gray-100 dark:border-slate-700"
-          onClick={(e) => e.stopPropagation()}
-        >
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={handleClose}
+          >
+            <motion.div
+              className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 dark:border-slate-700"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+            >
           <div className="px-6 py-4 flex justify-between items-center shrink-0" style={{ background: `linear-gradient(to right, var(--primary), var(--primary-hover))` }}>
             <div className="flex items-center gap-2">
               <span className="text-2xl">📢</span>
@@ -186,9 +205,11 @@ const NoticePopup = () => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </>
+        </motion.div>
+        </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
