@@ -4,11 +4,14 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const onCloseRef = useRef(onClose);
   
+  console.log("ImagePreviewer RENDERING", { images, initialIndex, previewOpen: !!images?.length });
+  
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   if (!images || images.length === 0) {
+    console.log("ImagePreviewer: no images, returning null");
     return null;
   }
 
