@@ -4,6 +4,16 @@ import { noticeService } from "../../services/api";
 import { format, parseISO } from "date-fns";
 import AdminLayout from "../../layouts/AdminLayout";
 import { useAuth } from "../../contexts/AuthContext";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.4, ease: "easeOut" }
+  })
+};
 
 const NoticeList = () => {
   const { user } = useAuth();
@@ -186,8 +196,12 @@ const NoticeList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {notices.map((notice, index) => (
-            <div
+            <motion.div
               key={notice.id}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
               onClick={() => navigate(`/notices/${notice.id}`)}
               className={`group bg-white dark:bg-slate-900 rounded-xl shadow-sm border ${
                 index === 0 && popupEnabled
@@ -259,7 +273,7 @@ const NoticeList = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
