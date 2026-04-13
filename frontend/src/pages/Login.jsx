@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { authService, brandbarService } from "../services/api";
 import { useToast } from "../contexts/ToastContext";
 import LoadingSpinner from "../components/LoadingSpinner";
+import PageWrapper from "../components/PageWrapper";
 
 const Login = () => {
   const [username, setUsername] = useState("");
