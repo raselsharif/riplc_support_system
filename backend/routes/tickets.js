@@ -41,13 +41,25 @@ router.post(
 // Simple upload with .single() instead of .array()
 const uploadMiddleware = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 }
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    console.log("File filter:", { mimetype: file.mimetype, originalname: file.originalname });
+    cb(null, true);
+  }
 });
 
 router.post("/:id/upload", uploadMiddleware.single("file"), (req, res) => {
+  console.log("Upload request received:", { 
+    params: req.params, 
+    file: req.file,
+    body: req.body 
+  });
+  
   if (!req.file) {
+    console.log("No file in request");
     return res.status(400).json({ message: "No file uploaded" });
   }
+  
   TicketController.upload(req, res);
 });
 
