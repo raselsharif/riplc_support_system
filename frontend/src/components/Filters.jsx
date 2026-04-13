@@ -16,13 +16,13 @@ const Filters = ({ onFilterChange, showDateRange = true, showBranch = false, sho
   };
 
   return (
-    <div className="rounded-lg shadow p-4 mb-6" style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div className="rounded-lg shadow p-3 md:p-4 mb-4 md:mb-6" style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4">
         {showStatus && (
           <select
             value={filters.status}
             onChange={(e) => handleChange('status', e.target.value)}
-            className="min-h-[44px] px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-h-[40px] md:min-h-[44px] px-2 md:px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
           >
             <option value="">All Status</option>
@@ -38,7 +38,7 @@ const Filters = ({ onFilterChange, showDateRange = true, showBranch = false, sho
           <select
             value={filters.branch_id}
             onChange={(e) => handleChange('branch_id', e.target.value)}
-            className="min-h-[44px] px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-h-[40px] md:min-h-[44px] px-2 md:px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
           >
             <option value="">All Branches</option>
@@ -56,16 +56,16 @@ const Filters = ({ onFilterChange, showDateRange = true, showBranch = false, sho
               type="date"
               value={filters.date_from}
               onChange={(e) => handleChange('date_from', e.target.value)}
-              placeholder="From Date"
-              className="min-h-[44px] px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="From"
+              className="min-h-[40px] md:min-h-[44px] px-2 md:px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             />
             <input
               type="date"
               value={filters.date_to}
               onChange={(e) => handleChange('date_to', e.target.value)}
-              placeholder="To Date"
-              className="min-h-[44px] px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="To"
+              className="min-h-[40px] md:min-h-[44px] px-2 md:px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             />
           </>
@@ -75,8 +75,8 @@ const Filters = ({ onFilterChange, showDateRange = true, showBranch = false, sho
           type="text"
           value={filters.search}
           onChange={(e) => handleChange('search', e.target.value)}
-          placeholder="Search tickets..."
-          className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Search..."
+          className="min-h-[40px] md:min-h-[44px] px-2 md:px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
         />
       </div>
