@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -22,56 +23,88 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   }, [goNext, goPrev, onClose]);
 
   return (
-    <div
+    <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
       onClick={onClose}
     >
-      <button
+      <motion.button
         onClick={onClose}
         className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+        initial={{ scale: 0, rotate: 180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
-      </button>
+      </motion.button>
 
       <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-        <button
+        <motion.button
           onClick={goPrev}
           className="absolute left-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full text-white text-xl flex items-center justify-center transition-colors"
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.15 }}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </motion.button>
 
-        <img
-          src={images[currentIndex].file_url}
-          alt={images[currentIndex].file_name}
-          className="max-h-[80vh] max-w-full object-contain rounded-lg shadow-2xl"
-        />
+        <motion.div
+          key={currentIndex}
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          className="relative"
+        >
+          <img
+            src={images[currentIndex].file_url}
+            alt={images[currentIndex].file_name}
+            className="max-h-[80vh] max-w-full object-contain rounded-lg shadow-2xl"
+          />
+        </motion.div>
 
-        <button
+        <motion.button
           onClick={goNext}
           className="absolute right-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full text-white text-xl flex items-center justify-center transition-colors"
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.15 }}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-        </button>
+        </motion.button>
       </div>
 
-      <div className="absolute bottom-4 text-center text-white">
+      <motion.div
+        className="absolute bottom-4 text-center text-white"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         <p className="text-sm font-medium">{images[currentIndex].file_name}</p>
         <p className="text-xs opacity-70 mt-1">
           {currentIndex + 1} / {images.length}
         </p>
-      </div>
+      </motion.div>
 
       {images.length > 1 && (
-        <div className="absolute bottom-16 flex gap-2 overflow-x-auto max-w-full px-4">
+        <motion.div
+          className="absolute bottom-16 flex gap-2 overflow-x-auto max-w-full px-4"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.25 }}
+        >
           {images.map((img, index) => (
-            <button
+            <motion.button
               key={img.id || index}
               onClick={() => setCurrentIndex(index)}
               className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
@@ -79,17 +112,19 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
                   ? "border-white scale-105"
                   : "border-transparent opacity-60 hover:opacity-100"
               }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               <img
                 src={img.file_url}
                 alt={img.file_name}
                 className="w-full h-full object-cover"
               />
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
