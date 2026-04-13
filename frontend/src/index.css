@@ -593,3 +593,16 @@ input[type="submit"]:active:not(:disabled),
 input[type="button"]:active:not(:disabled) {
   transform: translateY(0) scale(0.98);
 }
+
+/* Link Animations */
+a:not(.no-animation) {
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+a:not(.no-animation):hover {
+  transform: translateX(2px);
+}
+
+a:not(.no-animation):active {
+  transform: translateX(2px) scale(0.98);
+}
