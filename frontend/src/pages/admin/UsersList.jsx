@@ -4,6 +4,16 @@ import AdminLayout from '../../layouts/AdminLayout';
 import LoadMore from '../../components/LoadMore';
 import { userService, lookupService } from '../../services/api';
 import { useToast } from '../../contexts/ToastContext';
+import { motion } from 'framer-motion';
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -209,9 +219,13 @@ const handleSubmit = async (e) => {
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((user) => (
-                  <tr
+                filteredUsers.map((user, index) => (
+                  <motion.tr
                     key={user.id}
+                    custom={index}
+                    variants={rowVariants}
+                    initial="hidden"
+                    animate="visible"
                     className="border-b border-gray-200 dark:border-slate-700 transition-colors hover:bg-gray-50 dark:hover:bg-slate-700"
                   >
                   <td className="px-6 py-4 text-gray-900 dark:text-slate-100 font-medium">
@@ -283,7 +297,7 @@ const handleSubmit = async (e) => {
                       </button>
                     </div>
                   </td>
-                </tr>
+                </motion.tr>
               ))
             )}
             </tbody>

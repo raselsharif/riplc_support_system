@@ -2,6 +2,16 @@ import { Link } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
 import { format } from "date-fns";
 import { useAuth } from "../contexts/AuthContext";
+import { motion } from "framer-motion";
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const TicketTable = ({
   tickets,
@@ -99,9 +109,13 @@ const TicketTable = ({
             </tr>
           </thead>
           <tbody className="divide-y" style={{ divideColor: "var(--table-border)" }}>
-            {tickets.map((ticket) => (
-              <tr
+            {tickets.map((ticket, index) => (
+              <motion.tr
                 key={ticket.id}
+                custom={index}
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
                 className="transition-colors"
                 style={{ cursor: "pointer" }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--table-row-hover)"; }}
@@ -169,7 +183,7 @@ const TicketTable = ({
                     )}
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
