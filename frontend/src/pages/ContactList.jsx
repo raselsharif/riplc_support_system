@@ -7,6 +7,16 @@ import AdminLayout from "../layouts/AdminLayout";
 import UserLayout from "../layouts/UserLayout";
 import OfficerLayout from "../layouts/OfficerLayout";
 import ItLayout from "../layouts/ItLayout";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const ContactList = () => {
   const [branches, setBranches] = useState([]);
@@ -262,9 +272,13 @@ const ContactList = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {branch.contacts.map((contact) => (
-                  <div
+                {branch.contacts.map((contact, idx) => (
+                  <motion.div
                     key={contact.id}
+                    custom={idx}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
                     className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-5 hover:shadow-lg transition-shadow group relative"
                   >
                     {canEdit && (
@@ -320,7 +334,7 @@ const ContactList = () => {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
