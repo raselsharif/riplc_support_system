@@ -47,8 +47,6 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
         </svg>
       </motion.button>
 
-      </motion.button>
-
       <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
         <motion.button
           onClick={goPrev}
