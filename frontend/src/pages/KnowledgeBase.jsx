@@ -6,6 +6,16 @@ import AdminLayout from "../layouts/AdminLayout";
 import UserLayout from "../layouts/UserLayout";
 import OfficerLayout from "../layouts/OfficerLayout";
 import ItLayout from "../layouts/ItLayout";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.06, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const KnowledgeBase = () => {
   const { user } = useAuth();
@@ -181,9 +191,13 @@ const KnowledgeBase = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredArticles.map((article) => (
-              <button
+            {filteredArticles.map((article, i) => (
+              <motion.button
                 key={article.id}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
                 onClick={() => handleView(article)}
                 className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-left hover:shadow-md hover:border-blue-200 transition-all group"
               >
@@ -200,7 +214,7 @@ const KnowledgeBase = () => {
                   <span>{article.views} views</span>
                   <span>{new Date(article.updated_at).toLocaleDateString()}</span>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
         )}

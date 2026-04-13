@@ -3,6 +3,16 @@ import { useNavigate } from "react-router-dom";
 import AdminLayout from "../../layouts/AdminLayout";
 import api from "../../services/api";
 import { useToast } from "../../contexts/ToastContext";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const TicketTemplates = () => {
   const { addToast } = useToast();
@@ -104,8 +114,15 @@ const TicketTemplates = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center text-gray-500">No templates yet. Create one to get started.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {templates.map((t) => (
-              <div key={t.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            {templates.map((t, i) => (
+              <motion.div 
+                key={t.id} 
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                className="bg-white rounded-xl shadow-sm border border-gray-100 p-5"
+              >
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-gray-900">{t.name}</h3>
                   <button onClick={() => handleDelete(t.id)} className="text-red-500 hover:text-red-700 text-sm">Delete</button>
@@ -115,7 +132,7 @@ const TicketTemplates = () => {
                 </span>
                 {t.default_title && <p className="text-sm text-gray-600 mt-2">{t.default_title}</p>}
                 <p className="text-xs text-gray-400 mt-1">Created by {t.creator_name}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import { lookupService } from '../../services/api';
+import { motion } from 'framer-motion';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const BranchList = () => {
   const [branches, setBranches] = useState([]);
@@ -103,9 +113,13 @@ const BranchList = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {branches.map((branch) => (
-          <div
+        {branches.map((branch, i) => (
+          <motion.div
             key={branch.id}
+            custom={i}
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
             className="rounded-lg border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
             style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
           >
@@ -137,7 +151,7 @@ const BranchList = () => {
                 Delete
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 

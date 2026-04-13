@@ -3,6 +3,25 @@ import { Link } from "react-router-dom";
 import AdminLayout from "../../layouts/AdminLayout";
 import api from "../../services/api";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
+
+const statVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" }
+  })
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.03, duration: 0.2, ease: "easeOut" }
+  })
+};
 
 const ActivityLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -75,14 +94,24 @@ const ActivityLogs = () => {
         <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>Track all actions across the system</p>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          {stats.map((stat) => (
-            <div className="rounded-xl shadow-sm border p-4 text-center" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+        <motion.div 
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6"
+          initial="hidden"
+          animate="visible"
+        >
+          {stats.map((stat, i) => (
+            <motion.div 
+              key={stat.action} 
+              custom={i}
+              variants={statVariants}
+              className="rounded-xl shadow-sm border p-4 text-center" 
+              style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
+            >
               <p className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>{stat.count}</p>
               <p className="text-xs capitalize mt-1" style={{ color: "var(--text-muted)" }}>{stat.action.replace("_", " ")}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Filters */}
         <div className="rounded-xl shadow-sm border p-4 mb-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
@@ -172,9 +201,13 @@ const ActivityLogs = () => {
             <div className="text-center py-12" style={{ color: "var(--text-muted)" }}>No activity logs found</div>
           ) : (
             <div className="divide-y" style={{ divideColor: "var(--table-border)" }}>
-              {logs.map((log) => (
-                <div 
+              {logs.map((log, i) => (
+                <motion.div 
                   key={log.id} 
+                  custom={i}
+                  variants={rowVariants}
+                  initial="hidden"
+                  animate="visible"
                   className="px-4 sm:px-6 py-4 transition-colors cursor-pointer"
                   style={{ borderColor: "var(--border-default)" }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--table-row-hover)"; }}
@@ -215,7 +248,7 @@ const ActivityLogs = () => {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}

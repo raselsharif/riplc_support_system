@@ -10,6 +10,16 @@ import UserLayout from "../layouts/UserLayout";
 import OfficerLayout from "../layouts/OfficerLayout";
 import ItLayout from "../layouts/ItLayout";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
+
+const sessionVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.2, ease: "easeOut" }
+  })
+};
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
@@ -400,8 +410,15 @@ const Profile = () => {
               </div>
             ) : (
               <div className="divide-y" style={{ divideColor: "var(--border-light)" }}>
-                {sessions.map((session) => (
-                  <div key={session.id} className="px-6 py-4 flex items-center justify-between">
+                {sessions.map((session, i) => (
+                  <motion.div 
+                    key={session.id} 
+                    custom={i}
+                    variants={sessionVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="px-6 py-4 flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--primary-light)" }}>
                         <svg className="w-5 h-5" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -424,7 +441,7 @@ const Profile = () => {
                     >
                       Revoke
                     </button>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}
