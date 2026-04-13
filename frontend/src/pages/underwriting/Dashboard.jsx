@@ -9,6 +9,20 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import BranchAssignmentCard from "../../components/BranchAssignmentCard";
 import usePolling from "../../hooks/usePolling";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
 
 const UnderwritingDashboard = () => {
   const navigate = useNavigate();
@@ -160,9 +174,22 @@ const UnderwritingDashboard = () => {
 
   return (
     <OfficerLayout>
-      <h1 className="text-2xl font-bold mb-6">Underwriting Dashboard</h1>
+      <motion.h1 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-2xl font-bold mb-6"
+      >
+        Underwriting Dashboard
+      </motion.h1>
 
-      <div className="rounded-lg shadow p-6 mb-4" style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="rounded-lg shadow p-6 mb-4" 
+        style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
           <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>Quick Actions</h2>
           <div className="flex flex-wrap gap-2">
@@ -182,39 +209,56 @@ const UnderwritingDashboard = () => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-4 gap-6"
+        >
           {statCards.map((card) => (
-            <Link
-              key={card.label}
-              to={card.status === "all" ? "/underwriting/tickets" : `/underwriting/tickets?status=${card.status}`}
-              className={`${card.color} text-white p-6 rounded-lg shadow hover:opacity-90 transition-opacity relative`}
-            >
-              {card.value > 0 && card.status === "pending" && (
-                <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-              )}
-              <h3 className="text-sm opacity-80">{card.label}</h3>
-              <p className="text-3xl font-bold mt-2">{card.value}</p>
-            </Link>
+            <motion.div key={card.label} variants={itemVariants}>
+              <Link
+                to={card.status === "all" ? "/underwriting/tickets" : `/underwriting/tickets?status=${card.status}`}
+                className={`${card.color} text-white p-6 rounded-lg shadow hover:opacity-90 transition-opacity relative block`}
+              >
+                {card.value > 0 && card.status === "pending" && (
+                  <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                )}
+                <h3 className="text-sm opacity-80">{card.label}</h3>
+                <p className="text-3xl font-bold mt-2">{card.value}</p>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 mt-6">
-        <div className="bg-white dark:bg-slate-900 border-2 border-blue-200 dark:border-blue-500/60 rounded-xl p-4 shadow-sm">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="bg-white dark:bg-slate-900 border-2 border-blue-200 dark:border-blue-500/60 rounded-xl p-4 shadow-sm"
+        >
           <h3 className="text-sm font-bold text-blue-700 dark:text-blue-200 mb-3">Assigned Branches</h3>
           {assignedBranchStats.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
               {assignedBranchStats.map((branch) => (
-                <button
+                <motion.button
                   key={branch.id}
                   type="button"
+                  variants={itemVariants}
                   onClick={() => handleBranchClick(branch.id)}
                   className={`relative text-left bg-gray-50 dark:bg-slate-800 border-2 rounded-lg p-3 hover:shadow-lg transition-all ${
                     (branch.pending_tickets || 0) > 0
@@ -229,25 +273,74 @@ const UnderwritingDashboard = () => {
                   )}
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-semibold text-gray-800 dark:text-slate-100">{branch.name}</span>
-                    <span className="text-xs text-sky-600 dark:text-sky-300 bg-sky-100 dark:bg-sky-900/50 px-2 py-1 rounded">
-                      {branch.branch_code || ""}
-                    </span>
+                    <span className="text-xs text-sky-600 dark:text-sky-300 bg-sky-100 dark:bg-sky-900/50 px-2 py-1 rounded">{branch.branch_code || ""}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       <span className="text-lg font-bold text-blue-600 dark:text-blue-300">{branch.total_tickets || 0}</span>
                       <span className="text-xs text-gray-500 dark:text-slate-400">Total</span>
                     </div>
-                    {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                        {branch.pending_tickets} Pending
-                      </span>
-                    )}
+                    {(branch.pending_tickets || 0) > 0 && <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{branch.pending_tickets} Pending</span>}
                   </div>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           ) : (
+            <p className="text-xs text-blue-400">No assigned branches available.</p>
+          )}
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+        >
+          <h3 className="text-sm font-bold text-gray-600 dark:text-slate-200 mb-3">Other Branches</h3>
+          {otherBranchStats.length ? (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
+              {otherBranchStats.map((branch) => (
+                <motion.button
+                  key={branch.id}
+                  type="button"
+                  variants={itemVariants}
+                  onClick={() => handleBranchClick(branch.id)}
+                  className={`relative text-left bg-gray-50 dark:bg-slate-800 border-2 rounded-lg p-3 hover:shadow-lg transition-all ${
+                    (branch.pending_tickets || 0) > 0
+                      ? "border-yellow-400 hover:border-yellow-500 dark:border-amber-400 dark:hover:border-amber-300"
+                      : "border-gray-200 hover:border-gray-300 dark:border-slate-700 dark:hover:border-slate-600"
+                  }`}
+                >
+                  {navigatingBranchId === branch.id && (
+                    <div className="absolute inset-0 bg-black/5 dark:bg-white/5 rounded-lg flex items-center justify-center">
+                      <div className="h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-gray-800 dark:text-slate-100">{branch.name}</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 bg-gray-200 dark:bg-slate-700 px-2 py-1 rounded">{branch.branch_code || ""}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-lg font-bold text-gray-600 dark:text-slate-100">{branch.total_tickets || 0}</span>
+                      <span className="text-xs text-gray-500 dark:text-slate-400">Total</span>
+                    </div>
+                    {(branch.pending_tickets || 0) > 0 && <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">{branch.pending_tickets} Pending</span>}
+                  </div>
+                </motion.button>
+              ))}
+            </motion.div>
+          ) : (
+            <p className="text-xs text-gray-400 dark:text-slate-500">No other branches available.</p>
+          )}
+        </motion.div>
+      </div>
+    </OfficerLayout>
+  );
             <p className="text-xs text-blue-400">No assigned branches available.</p>
           )}
         </div>

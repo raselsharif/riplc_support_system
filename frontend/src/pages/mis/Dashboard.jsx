@@ -9,6 +9,20 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import BranchAssignmentCard from "../../components/BranchAssignmentCard";
 import usePolling from "../../hooks/usePolling";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
 
 const MisDashboard = () => {
   const navigate = useNavigate();
@@ -170,9 +184,22 @@ const MisDashboard = () => {
 
   return (
     <OfficerLayout>
-      <h1 className="text-2xl font-bold mb-6">MIS Dashboard</h1>
+      <motion.h1 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-2xl font-bold mb-6"
+      >
+        MIS Dashboard
+      </motion.h1>
 
-      <div className="rounded-lg shadow p-6 mb-4" style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="rounded-lg shadow p-6 mb-4" 
+        style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
           <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>Quick Actions</h2>
           <div className="flex flex-wrap gap-2">
@@ -192,39 +219,56 @@ const MisDashboard = () => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-4 gap-6"
+        >
           {statCards.map((card) => (
-            <Link
-              key={card.label}
-              to={card.status === "all" ? "/mis/tickets" : `/mis/tickets?status=${card.status}`}
-              className={`${card.color} text-white p-6 rounded-lg shadow hover:opacity-90 transition-opacity relative`}
-            >
-              {card.value > 0 && card.status === "pending" && (
-                <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-              )}
-              <h3 className="text-sm opacity-80">{card.label}</h3>
-              <p className="text-3xl font-bold mt-2">{card.value}</p>
-            </Link>
+            <motion.div key={card.label} variants={itemVariants}>
+              <Link
+                to={card.status === "all" ? "/mis/tickets" : `/mis/tickets?status=${card.status}`}
+                className={`${card.color} text-white p-6 rounded-lg shadow hover:opacity-90 transition-opacity relative block`}
+              >
+                {card.value > 0 && card.status === "pending" && (
+                  <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                )}
+                <h3 className="text-sm opacity-80">{card.label}</h3>
+                <p className="text-3xl font-bold mt-2">{card.value}</p>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 mt-6">
-        <div className="bg-white dark:bg-slate-900 border-2 border-blue-200 dark:border-blue-500/60 rounded-xl p-4 shadow-sm">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="bg-white dark:bg-slate-900 border-2 border-blue-200 dark:border-blue-500/60 rounded-xl p-4 shadow-sm"
+        >
           <h3 className="text-sm font-bold text-blue-700 dark:text-blue-200 mb-3">Assigned Branches</h3>
           {assignedBranchStats.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
               {assignedBranchStats.map((branch) => (
-                <button
+                <motion.button
                   key={branch.id}
                   type="button"
+                  variants={itemVariants}
                   onClick={() => handleBranchClick(branch.id)}
                   className={`relative text-left bg-gray-50 dark:bg-slate-800 border-2 rounded-lg p-3 hover:shadow-lg transition-all ${
                     (branch.pending_tickets || 0) > 0
@@ -254,21 +298,32 @@ const MisDashboard = () => {
                       </span>
                     )}
                   </div>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           ) : (
             <p className="text-xs text-blue-400">No assigned branches available.</p>
           )}
-        </div>
-        <div className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+        >
           <h3 className="text-sm font-bold text-gray-600 dark:text-slate-200 mb-3">Other Branches</h3>
           {otherBranchStats.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
               {otherBranchStats.map((branch) => (
-                <button
+                <motion.button
                   key={branch.id}
                   type="button"
+                  variants={itemVariants}
                   onClick={() => handleBranchClick(branch.id)}
                   className={`relative text-left bg-gray-50 dark:bg-slate-800 border-2 rounded-lg p-3 hover:shadow-lg transition-all ${
                     (branch.pending_tickets || 0) > 0
@@ -298,13 +353,13 @@ const MisDashboard = () => {
                       </span>
                     )}
                   </div>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           ) : (
             <p className="text-xs text-gray-400 dark:text-slate-500">No other branches available.</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </OfficerLayout>
   );
