@@ -7,6 +7,7 @@ import Filters from '../../components/Filters';
 import { ticketService, lookupService } from '../../services/api';
 import { useToast } from '../../contexts/ToastContext';
 import usePolling from '../../hooks/usePolling';
+import { motion } from 'framer-motion';
 
 const UnderwritingTickets = () => {
   const [searchParams] = useSearchParams();
@@ -43,7 +44,6 @@ const UnderwritingTickets = () => {
         const res = await lookupService.getBranches();
         setBranches(res.data);
       } catch (error) {
-        console.error('Failed to fetch branches:', error);
       }
     };
     fetchBranches();
@@ -55,7 +55,6 @@ const UnderwritingTickets = () => {
       const res = await ticketService.getAll({ ...filters, problem_type: 'underwriting', limit: page * PAGE_SIZE, offset: 0 });
       setTickets(res.data || []);
     } catch (e) {
-      // ignore poll errors
     }
   }, 5000, false);
 
@@ -70,7 +69,6 @@ const UnderwritingTickets = () => {
         setHasMore(response.data.length === PAGE_SIZE);
       }
     } catch (error) {
-      console.error('Failed to fetch tickets:', error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +83,6 @@ const UnderwritingTickets = () => {
       setPage(nextPage);
       setHasMore(response.data.length === PAGE_SIZE);
     } catch (error) {
-      console.error('Failed to load more tickets:', error);
     } finally {
       setLoadingMore(false);
     }
@@ -98,15 +95,53 @@ const UnderwritingTickets = () => {
 
   return (
     <OfficerLayout>
-      <h1 className="text-2xl font-bold mb-6">Underwriting Approval Queue</h1>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mb-6"
+      >
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+          Underwriting Approval Queue
+        </h1>
+        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+          Review and approve underwriting department tickets
+        </p>
+      </motion.div>
 
-      <Filters
-        onFilterChange={handleFilterChange}
-        showDateRange={true}
-        showBranch={true}
-        branches={branches}
-        showStatus={true}
-      />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="rounded-2xl shadow-lg p-4 mb-6 border"
+        style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #ec4899, #f43f5e)", color: "white" }}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="font-semibold" style={{ color: "var(--text-primary)" }}>Filters</h2>
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Search and filter underwriting tickets</p>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+      >
+        <Filters
+          onFilterChange={handleFilterChange}
+          showDateRange={true}
+          showBranch={true}
+          branches={branches}
+          showStatus={true}
+        />
+      </motion.div>
 
       {loading ? (
         <div className="flex justify-center py-12">
@@ -114,7 +149,13 @@ const UnderwritingTickets = () => {
         </div>
       ) : (
         <>
-          <TicketTable tickets={tickets} showUser={true} showBranch={true} />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <TicketTable tickets={tickets} showUser={true} showBranch={true} />
+          </motion.div>
           <LoadMore onLoadMore={handleLoadMore} hasMore={hasMore} loading={loadingMore} />
         </>
       )}

@@ -7,6 +7,7 @@ import Filters from "../../components/Filters";
 import { ticketService, lookupService } from "../../services/api";
 import { useToast } from "../../contexts/ToastContext";
 import usePolling from "../../hooks/usePolling";
+import { motion } from "framer-motion";
 
 const ItTickets = () => {
   const [searchParams] = useSearchParams();
@@ -43,7 +44,6 @@ const ItTickets = () => {
         const res = await lookupService.getBranches();
         setBranches(res.data);
       } catch (error) {
-        console.error("Failed to fetch branches:", error);
       }
     };
     fetchBranches();
@@ -55,7 +55,6 @@ const ItTickets = () => {
       const res = await ticketService.getAll({ ...filters, limit: page * PAGE_SIZE, offset: 0 });
       setTickets(res.data || []);
     } catch (e) {
-      // ignore polling errors
     }
   }, 5000, false);
 
@@ -70,7 +69,6 @@ const ItTickets = () => {
         setHasMore(response.data.length === PAGE_SIZE);
       }
     } catch (error) {
-      console.error("Failed to fetch tickets:", error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +83,6 @@ const ItTickets = () => {
       setPage(nextPage);
       setHasMore(response.data.length === PAGE_SIZE);
     } catch (error) {
-      console.error("Failed to load more tickets:", error);
     } finally {
       setLoadingMore(false);
     }
@@ -96,7 +93,6 @@ const ItTickets = () => {
       await ticketService.delete(ticketId);
       setTickets(tickets.filter((t) => t.id !== ticketId));
     } catch (error) {
-      console.error("Failed to delete ticket:", error);
       alert("Error: " + (error.response?.data?.message || error.message));
     }
   };
@@ -108,15 +104,53 @@ const ItTickets = () => {
 
   return (
     <ItLayout>
-      <h1 className="text-2xl font-bold mb-6">IT Tickets</h1>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mb-6"
+      >
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+          IT Tickets
+        </h1>
+        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+          Manage IT department support tickets
+        </p>
+      </motion.div>
 
-      <Filters
-        onFilterChange={handleFilterChange}
-        showDateRange={true}
-        showBranch={true}
-        branches={branches}
-        showStatus={true}
-      />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="rounded-2xl shadow-lg p-4 mb-6 border"
+        style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #8b5cf6, #7c3aed)", color: "white" }}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="font-semibold" style={{ color: "var(--text-primary)" }}>Filters</h2>
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Search and filter IT tickets</p>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+      >
+        <Filters
+          onFilterChange={handleFilterChange}
+          showDateRange={true}
+          showBranch={true}
+          branches={branches}
+          showStatus={true}
+        />
+      </motion.div>
 
       {loading ? (
         <div className="flex justify-center py-12">
@@ -124,12 +158,18 @@ const ItTickets = () => {
         </div>
       ) : (
         <>
-          <TicketTable
-            tickets={tickets}
-            showUser={true}
-            showBranch={true}
-            onDelete={handleDeleteTicket}
-          />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <TicketTable
+              tickets={tickets}
+              showUser={true}
+              showBranch={true}
+              onDelete={handleDeleteTicket}
+            />
+          </motion.div>
           <LoadMore onLoadMore={handleLoadMore} hasMore={hasMore} loading={loadingMore} />
         </>
       )}
