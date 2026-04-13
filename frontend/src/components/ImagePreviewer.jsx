@@ -4,24 +4,37 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const onCloseRef = useRef(onClose);
   
-  console.log("ImagePreviewer RENDERING", { images, initialIndex, previewOpen: !!images?.length });
+  console.log("ImagePreviewer RENDER", { 
+    hasImages: !!images, 
+    length: images?.length, 
+    type: typeof images,
+    isArray: Array.isArray(images)
+  });
   
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  if (!images || images.length === 0) {
-    console.log("ImagePreviewer: no images, returning null");
+  const imagesArray = Array.isArray(images) ? images : [];
+  const hasImages = imagesArray.length > 0;
+  
+  console.log("ImagePreviewer RENDER", { 
+    hasImages,
+    length: imagesArray.length,
+    previewOpen: hasImages
+  });
+  
+  if (!hasImages) {
     return null;
   }
 
   const goNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
+    setCurrentIndex((prev) => (prev + 1) % imagesArray.length);
+  }, [imagesArray.length]);
 
   const goPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
+    setCurrentIndex((prev) => (prev - 1 + imagesArray.length) % imagesArray.length);
+  }, [imagesArray.length]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -95,8 +108,8 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
         </button>
 
         <img
-          src={images[currentIndex].file_url}
-          alt={images[currentIndex].file_name}
+          src={imagesArray[currentIndex].file_url}
+          alt={imagesArray[currentIndex].file_name}
           style={{ maxHeight: "80vh", maxWidth: "90%", objectFit: "contain", borderRadius: 8 }}
         />
 
@@ -120,15 +133,15 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
       </div>
 
       <div style={{ position: "absolute", bottom: 16, textAlign: "center", color: "white" }}>
-        <p style={{ fontSize: 14, fontWeight: 500 }}>{images[currentIndex].file_name}</p>
+        <p style={{ fontSize: 14, fontWeight: 500 }}>{imagesArray[currentIndex].file_name}</p>
         <p style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>
-          {currentIndex + 1} / {images.length}
+          {currentIndex + 1} / {imagesArray.length}
         </p>
       </div>
 
-      {images.length > 1 && (
+      {imagesArray.length > 1 && (
         <div style={{ position: "absolute", bottom: 64, display: "flex", gap: 8, overflowX: "auto", padding: "0 16px" }}>
-          {images.map((img, index) => (
+          {imagesArray.map((img, index) => (
             <button
               key={img.id || index}
               onClick={() => setCurrentIndex(index)}
