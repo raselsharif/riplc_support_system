@@ -69,28 +69,8 @@ const NoticeDetail = () => {
 
   return (
     <>
-      {previewImage && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setPreviewImage(null)}
-        >
-          <button
-            className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
-            onClick={() => setPreviewImage(null)}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          <div className="max-w-[95vw] max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={previewImage}
-              alt="Preview"
-              className="max-w-[95vw] max-h-[95vh] object-contain"
-            />
-          </div>
-        </div>
-      )}
+      {/* TEMPORARILY DISABLED FOR TESTING */}
+      {/* {previewImage && ( ... )} */}
       <AdminLayout>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
         <Link
