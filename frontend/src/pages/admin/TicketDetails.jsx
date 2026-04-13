@@ -4,7 +4,7 @@ import AdminLayout from '../../layouts/AdminLayout';
 import StatusBadge from '../../components/StatusBadge';
 import UploadField from '../../components/UploadField';
 import MessageThread from '../../components/MessageThread';
-import ImagePreviewer from '../../components/ImagePreviewer';
+// import ImagePreviewer from '../../components/ImagePreviewer';
 import { ticketService } from '../../services/api';
 import { format } from 'date-fns';
 import { useToast } from '../../contexts/ToastContext';
@@ -190,13 +190,16 @@ const TicketDetails = () => {
               </div>
             )}
 
+            {/* ImagePreviewer removed - add back when needed */}
+            {/* 
             {previewOpen && attachments.filter(a => a.file_type === 'image').length > 0 && (
               <ImagePreviewer
                 images={attachments.filter(a => a.file_type === 'image')}
                 initialIndex={previewIndex}
                 onClose={() => setPreviewOpen(false)}
               />
-            )}
+            )} 
+            */}
 
             <MessageThread
               messages={messages}
