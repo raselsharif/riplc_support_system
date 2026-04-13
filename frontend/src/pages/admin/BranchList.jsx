@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import { lookupService } from '../../services/api';
 import { motion } from 'framer-motion';
+import Modal from '../../components/Modal';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -155,81 +156,77 @@ const BranchList = () => {
         ))}
       </div>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 w-full max-w-md mx-4 border border-gray-200 dark:border-slate-700 shadow-xl">
-            <h2 className="text-xl font-bold mb-4 text-[var(--text-primary)]">
-              {editBranch ? 'Edit Branch' : 'Add New Branch'}
-            </h2>
+      <Modal isOpen={showModal} onClose={handleCloseModal}>
+        <h2 className="text-xl font-bold mb-4 text-[var(--text-primary)]">
+          {editBranch ? 'Edit Branch' : 'Add New Branch'}
+        </h2>
 
-            {error && (
-              <div className="bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 p-3 rounded mb-4">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
-                  Branch Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
-                  placeholder="e.g. Head Office"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
-                  Branch Code
-                </label>
-                <input
-                  type="number"
-                  value={formData.branchCode}
-                  onChange={(e) => setFormData({ ...formData, branchCode: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
-                  placeholder="e.g. 101"
-                  required
-                />
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
-                  Address
-                </label>
-                <textarea
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
-                  rows="3"
-                  placeholder="Branch address..."
-                  required
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                >
-                  {editBranch ? 'Update Branch' : 'Create Branch'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 rounded hover:bg-slate-300 dark:hover:bg-slate-600"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+        {error && (
+          <div className="bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 p-3 rounded mb-4">
+            {error}
           </div>
-        </div>
-      )}
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
+              Branch Name
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
+              placeholder="e.g. Head Office"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
+              Branch Code
+            </label>
+            <input
+              type="number"
+              value={formData.branchCode}
+              onChange={(e) => setFormData({ ...formData, branchCode: e.target.value })}
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
+              placeholder="e.g. 101"
+              required
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-bold mb-2 text-[var(--text-secondary)]">
+              Address
+            </label>
+            <textarea
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-[var(--text-primary)]"
+              rows="3"
+              placeholder="Branch address..."
+              required
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            >
+              {editBranch ? 'Update Branch' : 'Create Branch'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCloseModal}
+              className="flex-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 rounded hover:bg-slate-300 dark:hover:bg-slate-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </AdminLayout>
   );
 };

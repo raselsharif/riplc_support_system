@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import LoadMore from '../../components/LoadMore';
+import Modal from '../../components/Modal';
 import { userService, lookupService } from '../../services/api';
 import { useToast } from '../../contexts/ToastContext';
 import { motion } from 'framer-motion';
@@ -307,152 +308,148 @@ const handleSubmit = async (e) => {
         </div>
       )}
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 w-full max-w-md mx-4 border border-gray-200 dark:border-slate-700 shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Create New User</h2>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <h2 className="text-xl font-bold mb-4">Create New User</h2>
 
-            {error && (
-              <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Name</label>
-              <input
-                type="text"
-                value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                  required
-                />
-              </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Username</label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                required
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Email (optional)</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                placeholder="user@example.com (optional)"
-              />
-            </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Password</label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Role</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                >
-                  <option value="user">User</option>
-                  <option value="it">IT</option>
-                  <option value="underwriting">Underwriting</option>
-                  <option value="mis">MIS</option>
-                </select>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Working Branch</label>
-                <select
-                  value={formData.branch_id}
-                  onChange={(e) => setFormData({ ...formData, branch_id: e.target.value })}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-                  required
-                >
-                  <option value="">Select Branch</option>
-                  {branches.map((branch) => (
-                    <option key={branch.id} value={branch.id}>
-                      {branch.name} ({branch.branch_code})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {formData.role !== 'user' && (
-                <div className="mb-6">
-                  <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Assigned Branches (extra)</label>
-                  <div className="border rounded-lg p-3 max-h-40 overflow-y-auto bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-700">
-                    {branches.map((branch) => (
-                      <label 
-                        key={branch.id} 
-                        className="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 rounded px-2"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.assigned_branch_ids?.includes(branch.id)}
-                          onChange={(e) => {
-                            const currentIds = formData.assigned_branch_ids || [];
-                            if (e.target.checked) {
-                              setFormData({ 
-                                ...formData, 
-                                assigned_branch_ids: [...currentIds, branch.id] 
-                              });
-                            } else {
-                              setFormData({ 
-                                ...formData, 
-                                assigned_branch_ids: currentIds.filter(id => id !== branch.id) 
-                              });
-                            }
-                          }}
-                          className="h-4 w-4 rounded text-blue-600 border-gray-300 dark:border-slate-600"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-slate-200">
-                          {branch.name} ({branch.branch_code})
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                    Working branch is above; assign more here if needed.
-                  </p>
-                </div>
-              )}
-
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                >
-                  Create User
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-slate-200 py-2 rounded hover:bg-gray-300 dark:hover:bg-slate-700"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+        {error && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            {error}
           </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Name</label>
+          <input
+            type="text"
+            value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+              required
+            />
         </div>
-      )}
+
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Username</label>
+        <input
+          type="text"
+          value={formData.username}
+          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Email (optional)</label>
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+          placeholder="user@example.com (optional)"
+        />
+      </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Password</label>
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Role</label>
+          <select
+            value={formData.role}
+            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+          >
+            <option value="user">User</option>
+            <option value="it">IT</option>
+            <option value="underwriting">Underwriting</option>
+            <option value="mis">MIS</option>
+          </select>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Working Branch</label>
+          <select
+            value={formData.branch_id}
+            onChange={(e) => setFormData({ ...formData, branch_id: e.target.value })}
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
+            required
+          >
+            <option value="">Select Branch</option>
+            {branches.map((branch) => (
+              <option key={branch.id} value={branch.id}>
+                {branch.name} ({branch.branch_code})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {formData.role !== 'user' && (
+          <div className="mb-6">
+            <label className="block text-gray-700 dark:text-slate-200 text-sm font-bold mb-2">Assigned Branches (extra)</label>
+            <div className="border rounded-lg p-3 max-h-40 overflow-y-auto bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-700">
+              {branches.map((branch) => (
+                <label 
+                  key={branch.id} 
+                  className="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 rounded px-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.assigned_branch_ids?.includes(branch.id)}
+                    onChange={(e) => {
+                      const currentIds = formData.assigned_branch_ids || [];
+                      if (e.target.checked) {
+                        setFormData({ 
+                          ...formData, 
+                          assigned_branch_ids: [...currentIds, branch.id] 
+                        });
+                      } else {
+                        setFormData({ 
+                          ...formData, 
+                          assigned_branch_ids: currentIds.filter(id => id !== branch.id) 
+                        });
+                      }
+                    }}
+                    className="h-4 w-4 rounded text-blue-600 border-gray-300 dark:border-slate-600"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-slate-200">
+                    {branch.name} ({branch.branch_code})
+                  </span>
+                </label>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+              Working branch is above; assign more here if needed.
+            </p>
+          </div>
+        )}
+
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          >
+            Create User
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+            className="flex-1 bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-slate-200 py-2 rounded hover:bg-gray-300 dark:hover:bg-slate-700"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+      </Modal>
     </AdminLayout>
   );
 };
