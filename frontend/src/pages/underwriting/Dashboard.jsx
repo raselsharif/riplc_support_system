@@ -341,56 +341,6 @@ const UnderwritingDashboard = () => {
       </div>
     </OfficerLayout>
   );
-            <p className="text-xs text-blue-400">No assigned branches available.</p>
-          )}
-        </div>
-        <div className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">
-          <h3 className="text-sm font-bold text-gray-600 dark:text-slate-200 mb-3">Other Branches</h3>
-          {otherBranchStats.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {otherBranchStats.map((branch) => (
-                <button
-                  key={branch.id}
-                  type="button"
-                  onClick={() => handleBranchClick(branch.id)}
-                  className={`relative text-left bg-gray-50 dark:bg-slate-800 border-2 rounded-lg p-3 hover:shadow-lg transition-all ${
-                    (branch.pending_tickets || 0) > 0
-                      ? "border-yellow-400 hover:border-yellow-500 dark:border-amber-400 dark:hover:border-amber-300"
-                      : "border-gray-200 hover:border-gray-300 dark:border-slate-700 dark:hover:border-slate-600"
-                  }`}
-                >
-                  {navigatingBranchId === branch.id && (
-                    <div className="absolute inset-0 bg-black/5 dark:bg-white/5 rounded-lg flex items-center justify-center">
-                      <div className="h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                    </div>
-                  )}
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold text-gray-800 dark:text-slate-100">{branch.name}</span>
-                    <span className="text-xs text-gray-500 dark:text-slate-300 bg-gray-200 dark:bg-slate-700 px-2 py-1 rounded">
-                      {branch.branch_code || ""}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <span className="text-lg font-bold text-gray-600 dark:text-slate-100">{branch.total_tickets || 0}</span>
-                      <span className="text-xs text-gray-500 dark:text-slate-400">Total</span>
-                    </div>
-                    {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                        {branch.pending_tickets} Pending
-                      </span>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-gray-400 dark:text-slate-500">No other branches available.</p>
-          )}
-        </div>
-      </div>
-    </OfficerLayout>
-  );
 };
 
 export default UnderwritingDashboard;
