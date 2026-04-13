@@ -495,7 +495,9 @@ function AppWithPopup() {
   return (
     <>
       {user && <BrandBar />}
-      <AppRoutes />
+      <div className={user ? "flex-1" : ""}>
+        <AppRoutes />
+      </div>
       {user && <NoticePopup />}
     </>
   );
