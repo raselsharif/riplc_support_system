@@ -563,3 +563,33 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Button Animations */
+button, 
+.btn,
+[role="button"],
+a.btn,
+input[type="submit"],
+input[type="button"],
+button[type="submit"],
+button[type="button"] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover:not(:disabled), 
+.btn:hover:not(:disabled),
+[role="button"]:hover:not(:disabled),
+a.btn:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled),
+input[type="button"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled), 
+.btn:active:not(:disabled),
+[role="button"]:active:not(:disabled),
+a.btn:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+input[type="button"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
