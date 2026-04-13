@@ -1,47 +1,45 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const imagesArray = Array.isArray(images) ? images : [];
-  const hasImages = imagesArray.length > 0;
   
-  if (!hasImages) {
+  if (imagesArray.length === 0) {
     return null;
   }
 
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.9)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black"
       onClick={onClose}
     >
       <button
+        className="absolute top-4 right-4 w-10 h-10 bg-red-500 text-white rounded-full text-lg font-bold"
         onClick={onClose}
-        style={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          backgroundColor: "#ef4444",
-          border: "none",
-          color: "white",
-          cursor: "pointer",
-          fontSize: 20,
-        }}
       >
         X
       </button>
+
+      <div className="flex items-center justify-center w-full h-full" onClick={e => e.stopPropagation()}>
+        <img
+          src={imagesArray[currentIndex].file_url}
+          alt={imagesArray[currentIndex].file_name}
+          className="max-h-[80vh] max-w-[90vw] object-contain"
+        />
+      </div>
+
+      <div className="absolute bottom-4 text-center text-white">
+        {currentIndex + 1} / {imagesArray.length}
+      </div>
     </div>
   );
 };
