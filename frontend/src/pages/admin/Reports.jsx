@@ -7,6 +7,25 @@ import {
 } from "../../services/api";
 import { useToast } from "../../contexts/ToastContext";
 import usePolling from "../../hooks/usePolling";
+import { motion } from "framer-motion";
+
+const statCardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" }
+  })
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.03, duration: 0.2, ease: "easeOut" }
+  })
+};
 
 const AdminReports = () => {
   const { addToast } = useToast();
@@ -210,19 +229,26 @@ const AdminReports = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <StatCard
-          label="Total Tickets"
-          value={totals.total}
-          color="bg-slate-600"
-        />
-        <StatCard label="Open" value={totals.open} color="bg-blue-600" />
-        <StatCard label="Pending" value={totals.pending} color="bg-amber-500" />
-        <StatCard
-          label="Approved"
-          value={totals.approved}
-          color="bg-green-600"
-        />
-        <StatCard label="Closed" value={totals.closed} color="bg-gray-500" />
+        <motion.div variants={statCardVariants} initial="hidden" animate="visible" className="bg-slate-600 text-white p-4 rounded shadow">
+          <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">Total Tickets</p>
+          <p className="text-2xl font-bold mt-1">{totals.total}</p>
+        </motion.div>
+        <motion.div variants={statCardVariants} initial="hidden" animate="visible" custom={1} className="bg-blue-600 text-white p-4 rounded shadow">
+          <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">Open</p>
+          <p className="text-2xl font-bold mt-1">{totals.open}</p>
+        </motion.div>
+        <motion.div variants={statCardVariants} initial="hidden" animate="visible" custom={2} className="bg-amber-500 text-white p-4 rounded shadow">
+          <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">Pending</p>
+          <p className="text-2xl font-bold mt-1">{totals.pending}</p>
+        </motion.div>
+        <motion.div variants={statCardVariants} initial="hidden" animate="visible" custom={3} className="bg-green-600 text-white p-4 rounded shadow">
+          <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">Approved</p>
+          <p className="text-2xl font-bold mt-1">{totals.approved}</p>
+        </motion.div>
+        <motion.div variants={statCardVariants} initial="hidden" animate="visible" custom={4} className="bg-gray-500 text-white p-4 rounded shadow">
+          <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">Closed</p>
+          <p className="text-2xl font-bold mt-1">{totals.closed}</p>
+        </motion.div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 mb-6">
@@ -330,8 +356,12 @@ const AdminReports = () => {
                   </tr>
                 ) : (
                   pagedTickets.map((t, idx) => (
-                    <tr
+                    <motion.tr
                       key={t.id || `${t.ticket_number || "ticket"}-${idx}`}
+                      custom={idx}
+                      variants={rowVariants}
+                      initial="hidden"
+                      animate="visible"
                       className="border-t border-gray-100 dark:border-slate-800"
                     >
                       <Td>{t.ticket_number}</Td>
@@ -345,7 +375,7 @@ const AdminReports = () => {
                           ? new Date(t.created_at).toLocaleString()
                           : "-"}
                       </Td>
-                    </tr>
+                    </motion.tr>
                   ))
                 )}
               </tbody>
@@ -382,13 +412,6 @@ const AdminReports = () => {
     </AdminLayout>
   );
 };
-
-const StatCard = ({ label, value, color }) => (
-  <div className={`${color} text-white p-4 rounded shadow`}>
-    <p className="text-xs sm:text-sm uppercase tracking-wide opacity-80">{label}</p>
-    <p className="text-2xl font-bold mt-1">{value}</p>
-  </div>
-);
 
 const Th = ({ children }) => (
   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase tracking-wide">
