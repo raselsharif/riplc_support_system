@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { MenuProvider } from "./contexts/MenuContext";
@@ -6,6 +6,7 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import NoticePopup from "./components/NoticePopup";
 import BrandBar from "./components/BrandBar";
 import PageWrapper from "./components/PageWrapper";
+import { useEffect } from "react";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -77,6 +78,14 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   return children;
+};
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 };
 
 const AppRoutes = () => {
@@ -478,6 +487,7 @@ const AppRoutes = () => {
 function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ScrollToTop />
       <AuthProvider>
         <ThemeProvider>
           <MenuProvider>
