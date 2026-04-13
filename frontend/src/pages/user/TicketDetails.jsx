@@ -155,6 +155,7 @@ const TicketDetails = () => {
 
         {attachments.filter(a => a.file_type === 'image').length > 0 && previewOpen && (
           <ImagePreviewer
+            key={Date.now()}
             images={attachments.filter(a => a.file_type === 'image')}
             initialIndex={previewIndex}
             onClose={() => setPreviewOpen(false)}
