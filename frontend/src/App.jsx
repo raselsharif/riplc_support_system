@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { MenuProvider } from "./contexts/MenuContext";
+import { AnimatePresence, motion } from "framer-motion";
 import LoadingSpinner from "./components/LoadingSpinner";
 import NoticePopup from "./components/NoticePopup";
 import BrandBar from "./components/BrandBar";
@@ -490,11 +491,23 @@ function App() {
 
 function AppWithPopup() {
   const { user } = useAuth();
+  const location = useLocation();
 
   return (
     <>
       {user && <BrandBar />}
-      <AppRoutes />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="flex-1"
+        >
+          <AppRoutes />
+        </motion.div>
+      </AnimatePresence>
       {user && <NoticePopup />}
     </>
   );
