@@ -2,6 +2,28 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../layouts/AdminLayout";
 import api from "../../services/api";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
+const barVariants = {
+  hidden: { scaleY: 0 },
+  visible: (i) => ({
+    scaleY: 1,
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const AnalyticsDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -59,93 +81,122 @@ const AnalyticsDashboard = () => {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+        <motion.div 
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={cardVariants} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <p className="text-sm text-gray-500">Total Tickets</p>
             <p className="text-3xl font-bold text-gray-900 mt-1">{stats.totalTickets}</p>
             <p className="text-xs text-green-600 mt-1">↑ {stats.newTickets} new</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          </motion.div>
+          <motion.div variants={cardVariants} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <p className="text-sm text-gray-500">Resolved</p>
             <p className="text-3xl font-bold text-green-600 mt-1">{stats.resolvedTickets}</p>
             <p className="text-xs text-gray-400 mt-1">
               {stats.totalTickets > 0 ? Math.round((stats.resolvedTickets / stats.totalTickets) * 100) : 0}% resolution rate
             </p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          </motion.div>
+          <motion.div variants={cardVariants} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <p className="text-sm text-gray-500">Avg Response</p>
             <p className="text-3xl font-bold text-blue-600 mt-1">{stats.avgResponseTime}h</p>
             <p className="text-xs text-gray-400 mt-1">Hours to first response</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          </motion.div>
+          <motion.div variants={cardVariants} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <p className="text-sm text-gray-500">Active Users</p>
             <p className="text-3xl font-bold text-purple-600 mt-1">{stats.activeUsers}</p>
             <p className="text-xs text-gray-400 mt-1">Logged in this period</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Daily Tickets Chart */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+        <motion.div 
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6"
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Daily Ticket Volume</h2>
           <div className="flex items-end gap-1 sm:gap-2 h-48">
             {stats.dailyTickets?.map((day, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
                 <div className="w-full relative flex items-end justify-center" style={{ height: "160px" }}>
-                  <div
+                  <motion.div
+                    initial={{ scaleY: 0 }}
+                    animate={{ scaleY: 1 }}
+                    transition={{ delay: i * 0.05, duration: 0.3, ease: "easeOut" }}
+                    style={{ originY: 1, height: `${(day.count / maxVal) * 100}%`, minHeight: day.count > 0 ? "4px" : "0" }}
                     className="w-full max-w-[40px] bg-blue-500 rounded-t-sm transition-all hover:bg-blue-600"
-                    style={{ height: `${(day.count / maxVal) * 100}%`, minHeight: day.count > 0 ? "4px" : "0" }}
                   />
                 </div>
                 <span className="text-[10px] text-gray-400 truncate w-full text-center">{day.date}</span>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <motion.div variants={cardVariants} initial="hidden" animate="visible" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">By Department</h2>
             <div className="space-y-3">
-              {stats.byDepartment?.map((dept) => (
-                <div key={dept.problem_type} className="flex items-center gap-3">
+              {stats.byDepartment?.map((dept, i) => (
+                <motion.div 
+                  key={dept.problem_type} 
+                  className="flex items-center gap-3"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.3 }}
+                >
                   <span className="text-sm text-gray-600 capitalize w-24">{dept.problem_type}</span>
                   <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <div
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stats.totalTickets > 0 ? (dept.count / stats.totalTickets) * 100 : 0}%` }}
+                      transition={{ delay: i * 0.1 + 0.2, duration: 0.5 }}
                       className={`h-full rounded-full ${
                         dept.problem_type === "it" ? "bg-purple-500" :
                         dept.problem_type === "underwriting" ? "bg-blue-500" : "bg-green-500"
                       }`}
-                      style={{ width: `${stats.totalTickets > 0 ? (dept.count / stats.totalTickets) * 100 : 0}%` }}
                     />
                   </div>
                   <span className="text-sm font-medium text-gray-900 w-8 text-right">{dept.count}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <motion.div variants={cardVariants} initial="hidden" animate="visible" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">By Priority</h2>
             <div className="space-y-3">
-              {stats.byPriority?.map((p) => (
-                <div key={p.priority} className="flex items-center gap-3">
+              {stats.byPriority?.map((p, i) => (
+                <motion.div 
+                  key={p.priority} 
+                  className="flex items-center gap-3"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.3 }}
+                >
                   <span className="text-sm text-gray-600 capitalize w-16">{p.priority}</span>
                   <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <div
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stats.totalTickets > 0 ? (p.count / stats.totalTickets) * 100 : 0}%` }}
+                      transition={{ delay: i * 0.1 + 0.2, duration: 0.5 }}
                       className={`h-full rounded-full ${
                         p.priority === "urgent" ? "bg-red-500" :
                         p.priority === "high" ? "bg-orange-500" :
                         p.priority === "medium" ? "bg-yellow-500" : "bg-green-500"
                       }`}
-                      style={{ width: `${stats.totalTickets > 0 ? (p.count / stats.totalTickets) * 100 : 0}%` }}
                     />
                   </div>
                   <span className="text-sm font-medium text-gray-900 w-8 text-right">{p.count}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </AdminLayout>
