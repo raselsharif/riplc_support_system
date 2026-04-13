@@ -186,7 +186,9 @@ class TicketController {
       const ticketId = req.params.id;
       const uploadedBy = req.user.id;
 
-      await AttachmentService.uploadFile({
+      console.log("Upload request:", { ticketId, uploadedBy, file: req.file?.originalname, size: req.file?.size });
+
+      const attachment = await AttachmentService.uploadFile({
         ticketId,
         uploadedBy,
         file: req.file,
@@ -196,7 +198,8 @@ class TicketController {
       const attachments = await AttachmentService.getAttachmentsByTicketId(ticketId);
       res.status(201).json(attachments);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.error("Upload error:", error);
+      res.status(500).json({ message: error.message || "Upload failed" });
     }
   }
 }
