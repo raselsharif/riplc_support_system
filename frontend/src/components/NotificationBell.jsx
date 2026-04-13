@@ -1,22 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useNotifications } from '../contexts/NotificationContext';
 import { format, parseISO } from 'date-fns';
 
 const NotificationBell = () => {
   const { notifications, unreadCount, clear } = useNotifications();
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
 
   const handleClear = (e) => {
     e.stopPropagation();
     clear();
     setOpen(false);
-  };
-
-  const handleClick = (link) => {
-    setOpen(false);
-    navigate(link);
   };
 
   return (
@@ -69,10 +63,11 @@ const NotificationBell = () => {
               <p className="px-3 py-4 text-sm text-center" style={{ color: "var(--text-muted)" }}>No new notifications</p>
             ) : (
               notifications.map((n) => (
-                <div
+                <Link
                   key={n.id}
-                  onClick={() => handleClick(n.link)}
-                  className="cursor-pointer block w-full text-left px-3 py-2 border-b last:border-b-0 transition-colors hover:opacity-80"
+                  to={n.link}
+                  onClick={() => setOpen(false)}
+                  className="block w-full text-left px-3 py-2 border-b last:border-b-0 transition-colors hover:opacity-80"
                   style={{ 
                     borderColor: "var(--border-light)",
                     backgroundColor: "transparent"
@@ -84,7 +79,7 @@ const NotificationBell = () => {
                       {format(parseISO(n.created_at), "MMM dd, HH:mm")}
                     </p>
                   )}
-                </div>
+                </Link>
               ))
             )}
           </div>

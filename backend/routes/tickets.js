@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const TicketController = require("../controllers/TicketController");
 const authMiddleware = require("../middleware/auth");
 const roleMiddleware = require("../middleware/role");
@@ -36,7 +37,20 @@ router.post(
   validate(approvalSchema),
   TicketController.reject,
 );
-router.post("/:id/upload", upload.array("file", 5), TicketController.upload);
+
+// Simple upload with .single() instead of .array()
+const uploadMiddleware = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 }
+});
+
+router.post("/:id/upload", uploadMiddleware.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  TicketController.upload(req, res);
+});
+
 router.delete("/:id", roleMiddleware("admin", "it"), TicketController.delete);
 
 module.exports = router;

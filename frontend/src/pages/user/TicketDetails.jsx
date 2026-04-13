@@ -57,15 +57,19 @@ const TicketDetails = () => {
     }
   };
 
-  const handleUpload = async (file) => {
+  const handleUpload = async (files) => {
+    if (!files || files.length === 0) return;
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      const fileToUpload = Array.isArray(files) ? files[0] : files;
+      formData.append('file', fileToUpload);
       const response = await ticketService.upload(id, formData);
       setAttachments(response.data);
+      alert('Upload successful!');
     } catch (error) {
-      console.error('Failed to upload file:', error);
+      const msg = error.response?.data?.message || error.message;
+      alert('Upload failed: ' + msg);
     } finally {
       setUploading(false);
     }

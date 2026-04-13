@@ -16,7 +16,6 @@ const SessionManagement = () => {
   const fetchSessions = async () => {
     try {
       const res = await api.get("/features/sessions");
-      console.log("Sessions response:", res.data);
       setSessions(res.data);
     } catch (error) {
       console.error("Failed to fetch sessions:", error.response?.data || error.message);

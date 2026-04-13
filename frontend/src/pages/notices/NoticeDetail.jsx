@@ -71,21 +71,24 @@ const NoticeDetail = () => {
     <>
       {previewImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
           onClick={() => setPreviewImage(null)}
         >
           <button
-            className="absolute top-4 right-4 text-white text-3xl hover:text-gray-300 transition-colors z-10"
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
             onClick={() => setPreviewImage(null)}
           >
-            &times;
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
-          <img
-            src={previewImage}
-            alt="Preview"
-            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="max-w-[95vw] max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="max-w-[95vw] max-h-[95vh] object-contain"
+            />
+          </div>
         </div>
       )}
       <AdminLayout>

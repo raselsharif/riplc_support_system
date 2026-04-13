@@ -66,7 +66,6 @@ const TicketDetails = () => {
   const fetchTicket = async () => {
     try {
       const response = await ticketService.getById(id);
-      console.log("Ticket data:", response.data);
       setTicket(response.data);
       setMessages(response.data.messages || []);
       setAttachments(response.data.attachments || []);
@@ -153,8 +152,6 @@ const TicketDetails = () => {
       </OfficerLayout>
     );
   }
-
-  console.log("Rendering ticket with status:", ticket?.status);
 
   return (
     <OfficerLayout>

@@ -1,17 +1,16 @@
 import { useState, useRef } from 'react';
-import { reduceImages } from '../utils/imageReducer';
 
-const MAX_FILES = 5;
-const MAX_SIZE_MB = 5;
+const MAX_FILES = 1;
+const MAX_SIZE_MB = 2;
 
 const UploadField = ({ onUpload, uploading = false }) => {
   const [dragOver, setDragOver] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const fileInputRef = useRef(null);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    await processFiles(files);
+    processFiles(files);
   };
 
   const handleDragOver = (e) => {
@@ -23,14 +22,14 @@ const UploadField = ({ onUpload, uploading = false }) => {
     setDragOver(false);
   };
 
-  const handleDrop = async (e) => {
+  const handleDrop = (e) => {
     e.preventDefault();
     setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
-    await processFiles(files);
+    processFiles(files);
   };
 
-  const processFiles = async (files) => {
+  const processFiles = (files) => {
     const imageFiles = files.filter(f => f.type.startsWith('image/'));
     
     if (imageFiles.length === 0) {
@@ -46,9 +45,8 @@ const UploadField = ({ onUpload, uploading = false }) => {
       return;
     }
 
-    const reduced = await reduceImages(imageFiles);
-    setSelectedFiles(reduced);
-    onUpload(reduced);
+    setSelectedFiles(imageFiles);
+    onUpload(imageFiles);
   };
 
   const removeFile = (index) => {
@@ -88,7 +86,7 @@ const UploadField = ({ onUpload, uploading = false }) => {
             <p className="text-gray-600">
               Drag & drop or <span className="text-blue-600 hover:underline">browse</span>
             </p>
-            <p className="text-xs text-gray-400 mt-1">Supports: JPG, PNG, GIF, WEBP • Max 5 files • Max 5MB each</p>
+            <p className="text-xs text-gray-400 mt-1">Supports: JPG, PNG, GIF, WEBP • Max 1 file • Max 2MB</p>
           </>
         )}
       </div>

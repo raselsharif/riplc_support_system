@@ -74,17 +74,20 @@ const NoticePopup = () => {
           onClick={() => setPreviewImage(null)}
         >
           <button
-            className="p-2 absolute top-4 right-4 text-white text-3xl hover:text-gray-300 transition-colors z-10"
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
             onClick={() => setPreviewImage(null)}
           >
-            &times;
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
-          <img
-            src={previewImage}
-            alt="Preview"
-            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="max-w-[95vw] max-h-[95vh]" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="max-w-[95vw] max-h-[95vh] object-contain"
+            />
+          </div>
         </div>
       )}
 
@@ -96,7 +99,7 @@ const NoticePopup = () => {
           className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden animate-in flex flex-col max-h-[90vh] border border-gray-100 dark:border-slate-700"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex justify-between items-center shrink-0">
+          <div className="px-6 py-4 flex justify-between items-center shrink-0" style={{ background: `linear-gradient(to right, var(--primary), var(--primary-hover))` }}>
             <div className="flex items-center gap-2">
               <span className="text-2xl">📢</span>
               <h2 className="text-lg font-bold text-white">Important Notice</h2>
@@ -167,7 +170,8 @@ const NoticePopup = () => {
             <Link
               to={`/notices/${notice.id}`}
               onClick={handleClose}
-              className="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium flex items-center gap-1"
+              className="text-sm font-medium flex items-center gap-1 hover:underline"
+              style={{ color: "var(--primary)" }}
             >
               View full details
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
@@ -175,7 +179,8 @@ const NoticePopup = () => {
             <div className="flex gap-3">
               <button
                 onClick={handleClose}
-                className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors shadow-sm dark:shadow-none"
+                className="text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm dark:shadow-none"
+                style={{ backgroundColor: "var(--primary)" }}
               >
                 Close
               </button>

@@ -192,6 +192,30 @@
 .theme-dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #475569 !important; }
 .theme-dark .divide-x > :not([hidden]) ~ :not([hidden]) { border-color: #475569 !important; }
 
+/* Browser autocomplete fix for all themes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--input-bg) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autocomplete */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+}
+
 /* Input styles for dark theme */
 .theme-dark input,
 .theme-dark select,
@@ -209,6 +233,30 @@
 
 .theme-dark button {
   border-color: var(--border-default) !important;
+}
+
+/* Fix browser autocomplete background color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--input-bg) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autocomplete */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
 }
 
 /* Date and Time Input Styles */

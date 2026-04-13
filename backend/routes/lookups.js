@@ -5,10 +5,11 @@ const roleMiddleware = require('../middleware/role');
 
 const router = express.Router();
 
-router.use(authMiddleware);
-
 router.get('/departments', LookupController.getDepartments);
 router.get('/branches', LookupController.getBranches);
+
+router.use(authMiddleware);
+
 router.post('/branches', roleMiddleware('admin'), LookupController.createBranch);
 router.put('/branches/:id', roleMiddleware('admin'), LookupController.updateBranch);
 router.delete('/branches/:id', roleMiddleware('admin'), LookupController.deleteBranch);
