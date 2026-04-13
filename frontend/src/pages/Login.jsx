@@ -3,8 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { authService, brandbarService } from "../services/api";
 import { useToast } from "../contexts/ToastContext";
-import LoadingSpinner from "../components/LoadingSpinner";
-import PageWrapper from "../components/PageWrapper";
+import Preloader from "../components/Preloader";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -21,11 +20,11 @@ const Login = () => {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPreloader(false);
-    }, 300);
+  const handlePreloaderComplete = () => {
+    setPreloader(false);
+  };
 
+  useEffect(() => {
     brandbarService
       .getSettings()
       .then((res) => {
@@ -37,9 +36,11 @@ const Login = () => {
         }
       })
       .catch(() => {});
-
-    return () => clearTimeout(timer);
   }, []);
+
+  if (preloader) {
+    return <Preloader onComplete={handlePreloaderComplete} />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
