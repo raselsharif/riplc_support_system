@@ -5,7 +5,6 @@ import StatusBadge from '../../components/StatusBadge';
 import UploadField from '../../components/UploadField';
 import MessageThread from '../../components/MessageThread';
 import ImagePreviewer from '../../components/ImagePreviewer';
-import { AnimatePresence } from 'framer-motion';
 import { ticketService } from '../../services/api';
 import { format } from 'date-fns';
 import { useToast } from '../../contexts/ToastContext';
@@ -191,15 +190,13 @@ const TicketDetails = () => {
               </div>
             )}
 
-            <AnimatePresence>
-              {previewOpen && (
-                <ImagePreviewer
-                  images={attachments.filter(a => a.file_type === 'image')}
-                  initialIndex={previewIndex}
-                  onClose={() => setPreviewOpen(false)}
-                />
-              )}
-            </AnimatePresence>
+            {previewOpen && (
+              <ImagePreviewer
+                images={attachments.filter(a => a.file_type === 'image')}
+                initialIndex={previewIndex}
+                onClose={() => setPreviewOpen(false)}
+              />
+            )}
 
             <MessageThread
               messages={messages}

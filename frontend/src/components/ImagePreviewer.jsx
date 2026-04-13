@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -22,6 +22,10 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goNext, goPrev, onClose]);
 
+  const handleClose = () => {
+    onClose();
+  };
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
@@ -29,19 +33,15 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      onClick={onClose}
+      onClick={handleClose}
     >
       <motion.button
-        onClick={onClose}
+        onClick={handleClose}
         className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
         initial={{ scale: 0, rotate: 180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </motion.button>
 
       <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
         <motion.button
@@ -60,7 +60,6 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
           key={currentIndex}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.8, opacity: 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
           className="relative"
         >
