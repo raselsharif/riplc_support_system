@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
+  if (!images || images.length === 0) {
+    return null;
+  }
+
   const goNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
   }, [images.length]);
