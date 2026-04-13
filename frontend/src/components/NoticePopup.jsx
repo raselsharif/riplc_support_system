@@ -14,9 +14,6 @@ const NoticePopup = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const dismissedIdRef = useRef(null);
 
-  // TEMPORARILY DISABLED FOR TESTING
-  return null;
-
   const checkPopup = useCallback(async () => {
     if (!user) return;
     try {

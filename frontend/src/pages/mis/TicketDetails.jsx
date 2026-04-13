@@ -209,7 +209,13 @@ const TicketDetails = () => {
               </div>
             )}
 
-            {/* Image preview removed temporarily */}
+            {previewOpen && attachments.filter(a => a.file_type === 'image').length > 0 && (
+              <ImagePreviewer
+                images={attachments.filter(a => a.file_type === 'image')}
+                initialIndex={previewIndex}
+                onClose={() => setPreviewOpen(false)}
+              />
+            )}
 
             <MessageThread
               messages={messages}
