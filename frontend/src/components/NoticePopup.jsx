@@ -62,15 +62,17 @@ const NoticePopup = () => {
     <>
       {previewImage && (
         <div
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80"
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm"
           onClick={() => setPreviewImage(null)}
         >
-          <button
-            className="absolute top-4 right-4 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center"
-            onClick={() => setPreviewImage(null)}
-          >
-            X
-          </button>
+            <button
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+              onClick={() => setPreviewImage(null)}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           <img
             src={previewImage}
             alt="Preview"
@@ -81,7 +83,7 @@ const NoticePopup = () => {
       )}
 
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       >
         <div
@@ -95,7 +97,7 @@ const NoticePopup = () => {
             </div>
             <button
               onClick={handleClose}
-              className="text-white/80 hover:text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center text-xl"
+              className="text-white/80 hover:text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors text-xl"
             >
               &times;
             </button>
