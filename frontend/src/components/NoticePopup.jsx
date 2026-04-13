@@ -8,6 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const POLL_INTERVAL = 15000;
 
 const NoticePopup = () => {
+  // COMPLETELY DISABLED - CAUSING BLACK SCREEN ON LOGIN
+  return null;
+  
   const { user } = useAuth();
   const [notice, setNotice] = useState(null);
   const [show, setShow] = useState(false);
