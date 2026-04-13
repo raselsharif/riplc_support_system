@@ -209,7 +209,7 @@ const TicketDetails = () => {
               </div>
             )}
 
-            {previewOpen && (
+            {attachments.filter(a => a.file_type === 'image').length > 0 && previewOpen && (
               <ImagePreviewer
                 images={attachments.filter(a => a.file_type === 'image')}
                 initialIndex={previewIndex}

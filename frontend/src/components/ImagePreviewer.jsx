@@ -36,69 +36,114 @@ const ImagePreviewer = ({ images, initialIndex = 0, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.9)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
       onClick={handleClose}
     >
       <button
         onClick={handleClose}
-        className="absolute top-4 right-4 z-10 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+        style={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          backgroundColor: "#ef4444",
+          border: "none",
+          color: "white",
+          cursor: "pointer",
+          fontSize: 20,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        X
       </button>
 
-      <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
         <button
           onClick={goPrev}
-          className="absolute left-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full text-white text-xl flex items-center justify-center transition-colors"
+          style={{
+            position: "absolute",
+            left: 16,
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            backgroundColor: "rgba(255,255,255,0.2)",
+            border: "none",
+            color: "white",
+            cursor: "pointer",
+            fontSize: 24,
+          }}
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          &lt;
         </button>
 
-        <div className="relative">
-          <img
-            src={images[currentIndex].file_url}
-            alt={images[currentIndex].file_name}
-            className="max-h-[80vh] max-w-full object-contain rounded-lg shadow-2xl"
-          />
-        </div>
+        <img
+          src={images[currentIndex].file_url}
+          alt={images[currentIndex].file_name}
+          style={{ maxHeight: "80vh", maxWidth: "90%", objectFit: "contain", borderRadius: 8 }}
+        />
 
         <button
           onClick={goNext}
-          className="absolute right-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full text-white text-xl flex items-center justify-center transition-colors"
+          style={{
+            position: "absolute",
+            right: 16,
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            backgroundColor: "rgba(255,255,255,0.2)",
+            border: "none",
+            color: "white",
+            cursor: "pointer",
+            fontSize: 24,
+          }}
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          &gt;
         </button>
       </div>
 
-      <div className="absolute bottom-4 text-center text-white">
-        <p className="text-sm font-medium">{images[currentIndex].file_name}</p>
-        <p className="text-xs opacity-70 mt-1">
+      <div style={{ position: "absolute", bottom: 16, textAlign: "center", color: "white" }}>
+        <p style={{ fontSize: 14, fontWeight: 500 }}>{images[currentIndex].file_name}</p>
+        <p style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>
           {currentIndex + 1} / {images.length}
         </p>
       </div>
 
       {images.length > 1 && (
-        <div className="absolute bottom-16 flex gap-2 overflow-x-auto max-w-full px-4">
+        <div style={{ position: "absolute", bottom: 64, display: "flex", gap: 8, overflowX: "auto", padding: "0 16px" }}>
           {images.map((img, index) => (
             <button
               key={img.id || index}
               onClick={() => setCurrentIndex(index)}
-              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                index === currentIndex
-                  ? "border-white scale-105"
-                  : "border-transparent opacity-60 hover:opacity-100"
-              }`}
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 8,
+                overflow: "hidden",
+                border: index === currentIndex ? "2px solid white" : "2px solid transparent",
+                opacity: index === currentIndex ? 1 : 0.6,
+                cursor: "pointer",
+                padding: 0,
+              }}
             >
               <img
                 src={img.file_url}
                 alt={img.file_name}
-                className="w-full h-full object-cover"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </button>
           ))}
