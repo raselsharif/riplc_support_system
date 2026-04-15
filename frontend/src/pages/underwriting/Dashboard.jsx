@@ -60,10 +60,11 @@ const UnderwritingDashboard = () => {
       ]);
       const tickets = ticketRes.data;
       setStats({
-        total: tickets.length,
-        pending: tickets.filter((t) => t.status === "pending").length,
-        approved: tickets.filter((t) => t.status === "approved").length,
-        rejected: tickets.filter((t) => t.status === "rejected").length,
+        total: tickets?.length || 0,
+        pending: tickets?.filter((t) => t.status === "pending").length || 0,
+        approved: tickets?.filter((t) => t.status === "approved").length || 0,
+        rejected: tickets?.filter((t) => t.status === "rejected").length || 0,
+        closed: tickets?.filter((t) => t.status === "closed").length || 0,
       });
       const baseBranchStats = branchRes.data || [];
 
@@ -286,7 +287,7 @@ const UnderwritingDashboard = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
       >
         {statCards.map((card, index) => (
           <motion.div key={card.label} variants={itemVariants}>
@@ -382,7 +383,7 @@ const UnderwritingDashboard = () => {
                       <span className="text-xs" style={{ color: "var(--text-muted)" }}>Total</span>
                     </div>
                     {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                      <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                         {branch.pending_tickets} Pending
                       </span>
                     )}
@@ -458,7 +459,7 @@ const UnderwritingDashboard = () => {
                       <span className="text-xs" style={{ color: "var(--text-muted)" }}>Total</span>
                     </div>
                     {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                      <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                         {branch.pending_tickets} Pending
                       </span>
                     )}

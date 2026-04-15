@@ -84,9 +84,13 @@ const UsersList = () => {
     }
   };
 
-  const handleStatusToggle = async (userId, currentStatus) => {
+  const handleStatusToggle = async (user, currentStatus) => {
+    if (user.role === 'admin') {
+      addToast({ type: 'error', message: 'Admin users cannot be disabled' });
+      return;
+    }
     try {
-      await userService.updateStatus(userId, { is_active: !currentStatus });
+      await userService.updateStatus(user.id, { is_active: !currentStatus });
       fetchUsers(true);
       addToast({ type: 'success', message: `User ${!currentStatus ? 'enabled' : 'disabled'}` });
     } catch (error) {
@@ -300,7 +304,7 @@ const UsersList = () => {
                               View
                             </Link>
                             <button
-                              onClick={() => handleStatusToggle(user.id, user.is_active)}
+                              onClick={() => handleStatusToggle(user, user.is_active)}
                               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80 border ${
                                 user.is_active ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700'
                               }`}
@@ -309,6 +313,10 @@ const UsersList = () => {
                             </button>
                             <button
                               onClick={() => {
+                                if (user.role === 'admin') {
+                                  addToast({ type: 'error', message: 'Admin users cannot be deleted' });
+                                  return;
+                                }
                                 if (window.confirm('Are you sure you want to delete this user?')) {
                                   userService.delete(user.id)
                                     .then(() => {

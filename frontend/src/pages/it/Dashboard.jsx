@@ -62,12 +62,12 @@ const ItDashboard = () => {
       ]);
       const tickets = ticketRes.data;
       setStats({
-        total: tickets.length,
-        open: tickets.filter((t) => t.status === "open").length,
-        pending: tickets.filter((t) => t.status === "pending").length,
-        approved: tickets.filter((t) => t.status === "approved").length,
-        rejected: tickets.filter((t) => t.status === "rejected").length,
-        closed: tickets.filter((t) => t.status === "closed").length,
+        total: tickets?.length || 0,
+        open: tickets?.filter((t) => t.status === "open").length || 0,
+        pending: tickets?.filter((t) => t.status === "pending").length || 0,
+        approved: tickets?.filter((t) => t.status === "approved").length || 0,
+        rejected: tickets?.filter((t) => t.status === "rejected").length || 0,
+        closed: tickets?.filter((t) => t.status === "closed").length || 0,
       });
       setBranchStats(branchRes.data || []);
     } catch (error) {
@@ -87,7 +87,7 @@ const ItDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
       ),
-      gradient: "from-violet-500 to-purple-600",
+      gradient: "from-blue-500 to-blue-600",
       link: "/it/tickets"
     },
     {
@@ -122,7 +122,7 @@ const ItDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      gradient: "from-blue-500 to-cyan-500",
+      gradient: "from-indigo-500 to-blue-500",
       link: "/it/tickets?status=approved"
     },
     {
@@ -144,7 +144,7 @@ const ItDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       ),
-      gradient: "from-slate-500 to-gray-600",
+      gradient: "from-sky-500 to-cyan-500",
       link: "/it/tickets?status=closed"
     },
   ];
@@ -353,7 +353,7 @@ const ItDashboard = () => {
                         </div>
                         <div className="flex gap-1.5">
                           {openCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{openCount}</span>}
-                          {pendingCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{pendingCount}</span>}
+                          {pendingCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{pendingCount}</span>}
                         </div>
                       </div>
                       {(hasOpen || hasPending) && (
@@ -438,8 +438,8 @@ const ItDashboard = () => {
                           <span className="text-xs" style={{ color: "var(--text-muted)" }}>Total</span>
                         </div>
                         <div className="flex gap-1.5">
-                          {openCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{openCount}</span>}
-                          {pendingCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{pendingCount}</span>}
+                          {openCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{openCount}</span>}
+                          {pendingCount > 0 && <span className="inline-flex items-center gap-1 bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">{pendingCount}</span>}
                         </div>
                       </div>
                     </motion.button>

@@ -23,6 +23,7 @@ const UserDashboard = () => {
     total: 0,
     open: 0,
     pending: 0,
+    approved: 0,
     closed: 0,
   });
   const [recentTickets, setRecentTickets] = useState([]);
@@ -56,10 +57,11 @@ const UserDashboard = () => {
       const response = await ticketService.getAll();
       const tickets = response.data;
       setStats({
-        total: tickets.length,
-        open: tickets.filter((t) => t.status === "open").length,
-        pending: tickets.filter((t) => t.status === "pending").length,
-        closed: tickets.filter((t) => t.status === "closed").length,
+        total: tickets?.length || 0,
+        open: tickets?.filter((t) => t.status === "open").length || 0,
+        pending: tickets?.filter((t) => t.status === "pending").length || 0,
+        approved: tickets?.filter((t) => t.status === "approved").length || 0,
+        closed: tickets?.filter((t) => t.status === "closed").length || 0,
       });
       setRecentTickets(tickets.slice(0, 5));
     } catch (error) {
@@ -71,7 +73,7 @@ const UserDashboard = () => {
   const statCards = [
     {
       label: "Total Tickets",
-      value: stats.total,
+      value: stats.total || 0,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -94,7 +96,7 @@ const UserDashboard = () => {
     },
     {
       label: "Pending",
-      value: stats.pending,
+      value: stats.pending || 0,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -105,14 +107,25 @@ const UserDashboard = () => {
       alert: stats.pending > 0
     },
     {
+      label: "Approved",
+      value: stats.approved || 0,
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      gradient: "from-indigo-500 to-blue-500",
+      link: "/user/tickets?status=approved"
+    },
+    {
       label: "Closed",
-      value: stats.closed,
+      value: stats.closed || 0,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       ),
-      gradient: "from-slate-500 to-gray-600",
+      gradient: "from-sky-500 to-cyan-500",
       link: "/user/tickets?status=closed"
     },
   ];
@@ -179,7 +192,7 @@ const UserDashboard = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
       >
         {statCards.map((card, index) => (
           <motion.div key={card.label} variants={itemVariants}>
@@ -294,7 +307,7 @@ const UserDashboard = () => {
                       const status = ticket.status;
                       const statusConfig = {
                         open: { bg: "from-emerald-500 to-emerald-600", text: "Open" },
-                        pending: { bg: "from-amber-500 to-orange-500", text: "Pending" },
+                        pending: { bg: "from-teal-500 to-cyan-500", text: "Pending" },
                         closed: { bg: "from-slate-400 to-gray-500", text: "Closed" },
                       };
                       const config = statusConfig[status] || statusConfig.closed;

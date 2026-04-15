@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useMenu } from "../contexts/MenuContext";
 import { authService, brandbarService } from "../services/api";
 import { useToast } from "../contexts/ToastContext";
 import Preloader from "../components/Preloader";
@@ -19,6 +20,7 @@ const Login = () => {
     company_name: "Republic Insurance",
   });
   const { login } = useAuth();
+  const { logoutPreloader, setLogoutPreloader } = useMenu();
   const navigate = useNavigate();
   const { addToast } = useToast();
 
@@ -39,6 +41,16 @@ const Login = () => {
       })
       .catch(() => {});
   }, []);
+
+  const handleLogoutComplete = () => {
+    localStorage.setItem('showLogoutPreloader', 'false');
+    setLogoutPreloader(false);
+    setPreloader(false);
+  };
+
+  if (logoutPreloader) {
+    return <Preloader type="signout" onComplete={handleLogoutComplete} />;
+  }
 
   if (preloader) {
     return <Preloader onComplete={handlePreloaderComplete} />;

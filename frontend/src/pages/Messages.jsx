@@ -16,39 +16,42 @@ const ContactItem = memo(({ contact, activeId, onSelect, onMobileSelect }) => (
       onSelect(contact.id);
       onMobileSelect?.();
     }}
-    className={`w-full flex items-center gap-2 px-3 py-3 text-sm border-b last:border-b-0 transition-colors ${
+    className={`w-full flex items-center gap-3 px-4 py-3 text-sm border-b last:border-b-0 transition-all ${
       String(activeId) === String(contact.id)
-        ? "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-200"
-        : "hover:bg-gray-50 dark:hover:bg-slate-800"
+        ? "bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-blue-200"
+        : "hover:bg-[var(--bg-muted)]"
     }`}
+    style={{ borderColor: "var(--border-light)" }}
   >
-    <span
-      className={`w-2.5 h-2.5 rounded-full ${
-        contact.is_online ? "bg-green-500" : "bg-red-500"
-      }`}
-      title={contact.is_online ? "Online" : "Offline"}
-    />
-    <img
-      src={
-        contact.profile_image_url ||
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=0D8ABC&color=fff&size=32`
-      }
-      alt={contact.name}
-      className="h-8 w-8 rounded-full object-cover"
-    />
-    <div className="flex-1 text-left">
+    <div className="relative flex-shrink-0">
+      <img
+        src={
+          contact.profile_image_url ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=0D8ABC&color=fff&size=32`
+        }
+        alt={contact.name}
+        className="h-10 w-10 rounded-xl object-cover shadow-sm"
+      />
+      <span
+        className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${
+          contact.is_online ? "bg-emerald-500" : "bg-gray-400"
+        }`}
+        title={contact.is_online ? "Online" : "Offline"}
+      />
+    </div>
+    <div className="flex-1 text-left min-w-0">
       <div className="flex items-center gap-2">
-        <div className="font-medium truncate">{contact.name}</div>
+        <div className="font-semibold truncate text-[var(--text-primary)]">{contact.name}</div>
         {contact.unread_count > 0 && (
-          <span className="inline-flex items-center justify-center bg-red-500 text-white text-xs font-semibold rounded-full px-2 py-0.5">
+          <span className="inline-flex items-center justify-center bg-rose-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px]">
             {contact.unread_count}
           </span>
         )}
       </div>
-      <div className="text-[11px] text-gray-500 flex flex-col">
-        <span>{contact.role}</span>
+      <div className="text-[11px] flex flex-col" style={{ color: "var(--text-muted)" }}>
+        <span className="capitalize">{contact.role}</span>
         {contact.branch_name && (
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[10px]">
             {contact.branch_name}
           </span>
         )}
@@ -60,52 +63,28 @@ const ContactItem = memo(({ contact, activeId, onSelect, onMobileSelect }) => (
 // Memoized message component to prevent unnecessary re-renders
 const MessageItem = memo(
   ({ message, isFromActiveContact, isFromCurrentUser, onImagePreview }) => {
-    const getFileIcon = (fileType) => {
-      if (!fileType) return "📎";
-
-      if (fileType.startsWith("image/")) return "🖼️";
-      if (fileType === "application/pdf") return "📄";
-      if (fileType.includes("document") || fileType.includes("word"))
-        return "📝";
-      if (fileType === "text/plain") return "📄";
-
-      return "📎";
-    };
-
-    const getFileDisplayName = (fileName, fileType) => {
-      if (!fileName) return "Attachment";
-
-      // For PDFs, show the name with PDF indicator
-      if (fileType === "application/pdf") {
-        return `${fileName}`;
-      }
-
-      return fileName;
-    };
-
     return (
       <div
-        className={`max-w-[70%] p-3 rounded shadow-sm ${
+        className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
           isFromActiveContact
-            ? "bg-white border self-start dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-            : "bg-blue-600 text-white ml-auto"
+            ? "rounded-tl-sm self-start"
+            : "rounded-tr-sm ml-auto"
         }`}
         style={{
           alignSelf: isFromActiveContact ? "flex-start" : "flex-end",
+          backgroundColor: isFromActiveContact ? "var(--bg-secondary)" : "var(--primary)",
+          border: isFromActiveContact ? "1px solid var(--border-default)" : "none",
+          color: isFromActiveContact ? "var(--text-primary)" : "white",
         }}
       >
-        <p className="text-xs opacity-80">{message.sender_name}</p>
+        <p className="text-xs opacity-70 mb-1">{message.sender_name}</p>
         {message.message && (
           <p className="text-sm whitespace-pre-wrap">{message.message}</p>
         )}
         {message.file_url && message.file_type && message.file_type.startsWith("image/") && (
           <div className="mt-2">
-            <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 shadow-sm">
-              <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-700 dark:text-slate-200">
-                <span className="text-base">🖼️</span>
-                <span>{message.file_name || "Image"}</span>
-              </div>
-              <div className="relative group w-full max-w-[240px] rounded-lg overflow-hidden border border-gray-100 dark:border-slate-700">
+            <div className="rounded-xl border overflow-hidden shadow-sm" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+              <div className="relative group w-full max-w-[240px]">
                 <img
                   src={message.file_url}
                   alt={message.file_name || "Image"}
@@ -124,7 +103,8 @@ const MessageItem = memo(
                       name: message.file_name || "Image",
                     })
                   }
-                  className="absolute bottom-2 right-2 px-2 py-1 rounded-md text-[11px] font-semibold bg-black/60 text-white backdrop-blur hover:bg-black/75 transition-colors"
+                  className="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur transition-all hover:scale-105"
+                  style={{ backgroundColor: "rgba(0,0,0,0.6)", color: "white" }}
                 >
                   View
                 </button>
@@ -132,13 +112,13 @@ const MessageItem = memo(
             </div>
           </div>
         )}
-        <p className="text-[10px] opacity-70 mt-1">
+        <p className="text-[10px] mt-1" style={{ opacity: 0.7 }}>
           {message.created_at
             ? new Date(message.created_at).toLocaleTimeString()
             : ""}
         </p>
         {isFromCurrentUser && (
-          <p className="text-[10px] mt-1 opacity-80">
+          <p className="text-[10px] mt-1" style={{ opacity: 0.7 }}>
             {message.read_at ? "Seen" : "Sent"}
           </p>
         )}
@@ -563,33 +543,49 @@ const Messages = () => {
   return (
     <Layout>
       <div className="py-2 w-full mx-auto">
-        <h1 className="text-xl sm:text-2xl font-semibold mb-4">Messages</h1>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">Messages</h1>
+          </div>
+        </div>
         <div className="flex gap-4 h-[calc(100vh-160px)]">
           {/* Desktop contact list */}
-          <aside className="hidden md:flex w-80 border rounded-lg overflow-hidden flex-col border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-50 dark:bg-slate-800 flex-shrink-0 border-gray-200 dark:border-slate-800">
+          <aside className="hidden md:flex w-80 rounded-xl overflow-hidden flex-col border" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+            <div className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0" style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-muted)" }}>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Contacts</span>
+                <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Contacts</span>
                 {loadingContacts && (
-                  <span className="text-xs text-gray-300">Refreshing...</span>
+                  <span className="text-xs" style={{ color: "var(--text-muted)" }}>Refreshing...</span>
                 )}
               </div>
               <button
                 onClick={loadContacts}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs font-medium hover:opacity-80 transition-opacity"
+                style={{ color: "var(--primary)" }}
                 title="Refresh"
               >
                 ↻
               </button>
             </div>
-            <div className="px-3 py-2 border-b bg-gray-50 dark:bg-slate-800 flex-shrink-0 border-gray-200 dark:border-slate-800">
-              <input
-                type="text"
-                placeholder="Search by name or branch..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[44px] bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-700 text-gray-900 dark:text-slate-100"
-              />
+            <div className="px-3 py-2 border-b flex-shrink-0" style={{ borderColor: "var(--border-light)" }}>
+              <div className="relative">
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-muted)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search by name or branch..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-[44px]"
+                  style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
+                />
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto relative">
               {filteredContacts.length > 0 ? (
@@ -603,7 +599,7 @@ const Messages = () => {
                   />
                 ))
               ) : (
-                <p className="p-3 text-xs text-gray-500">
+                <p className="p-3 text-xs" style={{ color: "var(--text-muted)" }}>
                   {searchQuery.trim() ? "No contacts found" : "No contacts"}
                 </p>
               )}
@@ -660,15 +656,16 @@ const Messages = () => {
           )}
 
           {/* Conversation pane */}
-          <section className="flex-1 min-w-0 border rounded-lg flex flex-col h-full min-h-0 border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <div className="px-4 py-3 border-b bg-gray-50 dark:bg-slate-800 flex items-center gap-2 flex-shrink-0 relative border-gray-200 dark:border-slate-800">
+          <section className="flex-1 min-w-0 border rounded-xl flex flex-col h-full min-h-0" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+            <div className="px-4 py-3 border-b flex items-center gap-3 flex-shrink-0 relative" style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-muted)" }}>
               <button
-                className="md:hidden p-2 mr-1 rounded-lg hover:bg-gray-200 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="md:hidden p-2 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-[var(--bg-secondary)]"
                 onClick={() => setShowContactsMobile(true)}
                 aria-label="Back to contacts"
               >
                 <svg
-                  className="w-5 h-5 text-gray-700"
+                  className="w-5 h-5"
+                  style={{ color: "var(--text-primary)" }}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -682,14 +679,15 @@ const Messages = () => {
                 </svg>
               </button>
               {showNotificationPrompt && (
-                <div className="absolute top-2 right-4 z-10 bg-yellow-100 border border-yellow-300 text-yellow-700 px-3 py-2 rounded flex items-center gap-2 text-xs">
+                <div className="absolute top-2 right-4 z-10 px-3 py-2 rounded-lg text-xs flex items-center gap-2" style={{ backgroundColor: "rgba(245, 158, 11, 0.1)", color: "#f59e0b", border: "1px solid rgba(245, 158, 11, 0.2)" }}>
                   <span>Desktop notifications are not enabled.</span>
                   <button
                     onClick={async () => {
                       const granted = await requestNotificationPermission();
                       setShowNotificationPrompt(!granted);
                     }}
-                    className="text-blue-600 hover:underline font-semibold"
+                    className="font-semibold hover:underline"
+                    style={{ color: "var(--primary)" }}
                   >
                     Enable
                   </button>
@@ -697,21 +695,21 @@ const Messages = () => {
               )}
               {activeContact ? (
                 <>
-                  <span
-                    className={`w-3 h-3 rounded-full ${
-                      activeContact.is_online ? "bg-green-500" : "bg-red-500"
-                    }`}
-                    title={activeContact.is_online ? "Online" : "Offline"}
-                  />
-                  <div>
-                    <div className="font-medium">{activeContact.name}</div>
-                    <div className="text-xs text-gray-500">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+                    <span className="text-white font-semibold text-sm">
+                      {activeContact.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>{activeContact.name}</div>
+                    <div className="text-xs flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
+                      <span className={`w-2 h-2 rounded-full ${activeContact.is_online ? "bg-emerald-500" : "bg-gray-400"}`} />
                       {activeContact.role}
                     </div>
                   </div>
                 </>
               ) : (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                   Select a contact to start chatting
                 </p>
               )}
@@ -719,18 +717,15 @@ const Messages = () => {
 
             <div
               id="messages-thread"
-              className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50 dark:bg-slate-900 relative min-h-0 custom-scroll"
-              style={{
-                scrollBehavior: "smooth",
-                willChange: "scroll-position",
-              }}
+              className="flex-1 overflow-y-auto px-4 py-3 space-y-3 relative min-h-0 custom-scroll"
+              style={{ backgroundColor: "var(--chat-bg, #f8fafc)", scrollBehavior: "smooth", willChange: "scroll-position" }}
             >
               {loadingMessages ? (
                 <div className="flex items-center justify-center h-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "var(--primary)" }}></div>
                 </div>
               ) : !messages.length && activeId ? (
-                <p className="text-xs text-gray-500">No messages yet</p>
+                <p className="text-xs text-center" style={{ color: "var(--text-muted)" }}>No messages yet</p>
               ) : (
                 messages.map((m) => (
                   <MessageItem
@@ -744,11 +739,12 @@ const Messages = () => {
                   />
                 ))
               )}
-              {otherTyping && <p className="text-xs text-blue-600">Typing…</p>}
+              {otherTyping && <p className="text-xs font-medium" style={{ color: "var(--primary)" }}>Typing…</p>}
               {showScrollButton && (
                 <button
                   onClick={scrollToBottom}
-                  className="absolute bottom-4 right-4 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                  className="absolute bottom-4 right-4 p-3 rounded-full shadow-lg transition-all hover:-translate-y-0.5"
+                  style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))", color: "white" }}
                   title="Scroll to bottom"
                 >
                   ↓
@@ -756,12 +752,14 @@ const Messages = () => {
               )}
             </div>
 
-            <div className="border-t px-4 py-3 bg-white dark:bg-slate-900 space-y-3 flex-shrink-0 border-gray-200 dark:border-slate-800">
+            <div className="border-t px-4 py-3 space-y-3 flex-shrink-0" style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-secondary)" }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg cursor-pointer border border-gray-200 hover:border-gray-300 dark:border-slate-700 dark:hover:border-slate-600 transition-colors">
+                  <label className="flex items-center gap-2 px-3 py-2 text-sm rounded-xl cursor-pointer border transition-all hover:shadow-md"
+                    style={{ backgroundColor: "var(--bg-muted)", borderColor: "var(--border-default)", color: "var(--text-secondary)" }}>
                     <svg
-                      className="w-4 h-4 text-gray-600"
+                      className="w-4 h-4"
+                      style={{ color: "var(--primary)" }}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -773,8 +771,8 @@ const Messages = () => {
                         d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                       />
                     </svg>
-                    <span className="text-gray-700 dark:text-slate-200 font-medium">
-                      Attach File
+                    <span className="font-medium">
+                      Attach
                     </span>
                     <input
                       type="file"
@@ -787,9 +785,10 @@ const Messages = () => {
                   </label>
 
                   {file && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-900/30 dark:border-blue-700">
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl border" style={{ backgroundColor: "var(--primary-light)", borderColor: "var(--primary)" }}>
                       <svg
-                        className="w-4 h-4 text-blue-600"
+                        className="w-4 h-4"
+                        style={{ color: "var(--primary)" }}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -798,27 +797,29 @@ const Messages = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
                       <div className="flex flex-col">
                         <span
-                          className="text-sm font-medium text-blue-900 dark:text-blue-100 truncate max-w-[150px]"
+                          className="text-sm font-medium truncate max-w-[150px]"
+                          style={{ color: "var(--primary)" }}
                           title={file.name}
                         >
                           {file.name}
                         </span>
-                        <span className="text-xs text-blue-600">
+                        <span className="text-xs" style={{ color: "var(--primary)" }}>
                           {(file.size / 1024 / 1024).toFixed(2)} MB
                         </span>
                       </div>
                       <button
                         onClick={() => setFile(null)}
-                        className="ml-2 p-1 hover:bg-blue-100 rounded-full transition-colors"
+                        className="ml-2 p-1 rounded-full transition-colors hover:opacity-80"
                         title="Remove file"
                       >
                         <svg
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4"
+                          style={{ color: "var(--primary)" }}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -835,8 +836,8 @@ const Messages = () => {
                   )}
                 </div>
 
-                <div className="text-xs text-gray-500 dark:text-slate-400">
-                  Max: 500KB — Images only (JPG, PNG, GIF, WEBP)
+                <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  Max: 500KB — Images only
                 </div>
               </div>
 
@@ -844,12 +845,13 @@ const Messages = () => {
                 value={input}
                 onChange={(e) => handleTyping(e.target.value)}
                 rows={3}
-                className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-700 text-gray-900 dark:text-slate-100"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 resize-none transition-all"
+                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
                 placeholder="Type a message..."
               />
 
               <div className="flex justify-between items-center">
-                <div className="text-xs text-gray-500 dark:text-slate-400">
+                <div className="text-xs" style={{ color: "var(--text-muted)" }}>
                   {activeContact
                     ? `Chatting with ${activeContact.name}`
                     : "Select a contact"}
@@ -859,7 +861,8 @@ const Messages = () => {
                   disabled={
                     !activeId || (!input.trim() && !file) || sendingMessage
                   }
-                  className="bg-blue-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium inline-flex items-center gap-2"
+                  className="px-5 py-2 rounded-xl text-sm font-medium transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 text-white"
+                  style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
                 >
                   {sendingMessage ? (
                     <>

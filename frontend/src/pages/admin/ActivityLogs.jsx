@@ -90,8 +90,17 @@ const ActivityLogs = () => {
   return (
     <AdminLayout>
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>Activity Log</h1>
-        <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>Track all actions across the system</p>
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Activity Log</h1>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Track all actions across the system</p>
+          </div>
+        </div>
 
         {/* Stats */}
         <motion.div 
@@ -104,11 +113,12 @@ const ActivityLogs = () => {
               key={stat.action} 
               custom={i}
               variants={statVariants}
-              className="rounded-xl shadow-sm border p-4 text-center" 
-              style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
+              className="rounded-xl p-4 text-center relative overflow-hidden group"
+              style={{ background: "linear-gradient(135deg, var(--bg-secondary), var(--bg-muted))", borderColor: "var(--border-default)" }}
             >
-              <p className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>{stat.count}</p>
-              <p className="text-xs capitalize mt-1" style={{ color: "var(--text-muted)" }}>{stat.action.replace("_", " ")}</p>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, var(--primary-light), transparent)" }} />
+              <p className="text-2xl font-bold relative z-10" style={{ color: "var(--text-primary)" }}>{stat.count}</p>
+              <p className="text-xs capitalize mt-1 relative z-10" style={{ color: "var(--text-muted)" }}>{stat.action.replace("_", " ")}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -116,19 +126,24 @@ const ActivityLogs = () => {
         {/* Filters */}
         <div className="rounded-xl shadow-sm border p-4 mb-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
           <div className="flex flex-wrap gap-3">
-            <input
-              type="text"
-              placeholder="Search by user name"
-              value={filterUser}
-              onChange={(e) => { setFilterUser(e.target.value); setPage(1); }}
-              className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
-            />
+            <div className="flex-1 min-w-[200px] relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by user name"
+                value={filterUser}
+                onChange={(e) => { setFilterUser(e.target.value); setPage(1); }}
+                className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
+              />
+            </div>
             <select
               value={filterType}
               onChange={(e) => { setFilterType(e.target.value); setPage(1); }}
-              className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ backgroundColor: "var(--select-bg)", borderColor: "var(--select-border)", color: "var(--text-primary)" }}
+              className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--select-bg)", borderColor: "var(--select-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             >
               <option value="">All Entities</option>
               <option value="ticket">Tickets</option>
@@ -141,8 +156,8 @@ const ActivityLogs = () => {
             <select
               value={filterAction}
               onChange={(e) => { setFilterAction(e.target.value); setPage(1); }}
-              className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ backgroundColor: "var(--select-bg)", borderColor: "var(--select-border)", color: "var(--text-primary)" }}
+              className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--select-bg)", borderColor: "var(--select-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             >
               <option value="">All Actions</option>
               <option value="create">Create</option>
@@ -154,23 +169,23 @@ const ActivityLogs = () => {
               <option value="assign">Assign</option>
             </select>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-gray-500">From</label>
+              <label className="text-xs text-[var(--text-muted)]">From</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => { setStartDate(e.target.value); setPage(1); }}
-                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-gray-500">To</label>
+              <label className="text-xs text-[var(--text-muted)]">To</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => { setEndDate(e.target.value); setPage(1); }}
-                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               />
             </div>
             {(filterType || filterAction || filterUser || startDate || endDate) && (
@@ -183,9 +198,10 @@ const ActivityLogs = () => {
                   setEndDate("");
                   setPage(1);
                 }}
-                className="px-3 py-2 text-sm underline transition-colors"
+                className="px-3 py-2 text-sm font-medium rounded-lg transition-all hover:bg-[var(--bg-muted)]"
+                style={{ color: "var(--primary)" }}
               >
-                Clear Filters
+                Clear
               </button>
             )}
           </div>

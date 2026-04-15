@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const MAX_FILES = 1;
 const MAX_SIZE_MB = 2;
@@ -56,7 +57,15 @@ const UploadField = ({ onUpload, uploading = false }) => {
   };
 
   return (
-    <div className="border-2 border-dashed rounded-lg p-4 sm:p-6 text-center">
+    <motion.div 
+      className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
+        dragOver ? 'scale-[1.02]' : ''
+      }`}
+      style={{ 
+        borderColor: dragOver ? "var(--primary)" : "var(--border-default)",
+        backgroundColor: dragOver ? "var(--primary-light)" : "var(--bg-muted)"
+      }}
+    >
       <input
         ref={fileInputRef}
         type="file"
@@ -66,55 +75,72 @@ const UploadField = ({ onUpload, uploading = false }) => {
         className="hidden"
       />
 
-      <div
+      <motion.div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`cursor-pointer transition-colors ${
-          dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
-        }`}
+        className="cursor-pointer transition-all duration-200"
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
       >
         {uploading ? (
           <div className="flex flex-col items-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
-            <p className="text-gray-500">Uploading...</p>
+            <div className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin mb-3" style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }} />
+            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>Uploading...</p>
           </div>
         ) : (
           <>
-            <span className="text-4xl mb-2 block">📁</span>
-            <p className="text-gray-600">
-              Drag & drop or <span className="text-blue-600 hover:underline">browse</span>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="font-medium" style={{ color: "var(--text-primary)" }}>
+              Drag & drop your image here
             </p>
-            <p className="text-xs text-gray-400 mt-1">Supports: JPG, PNG, GIF, WEBP • Max 1 file • Max 2MB</p>
+            <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+              or <span className="font-medium cursor-pointer hover:underline" style={{ color: "var(--primary)" }}>browse</span> to upload
+            </p>
+            <p className="text-xs mt-3" style={{ color: "var(--text-muted)" }}>Supports: JPG, PNG, GIF, WEBP • Max {MAX_FILES} file • Max {MAX_SIZE_MB}MB</p>
           </>
         )}
-      </div>
+      </motion.div>
 
       {selectedFiles.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2 justify-center">
+        <div className="mt-4 flex flex-wrap gap-3 justify-center">
           {selectedFiles.map((file, index) => (
-            <div key={index} className="relative group">
+            <motion.div 
+              key={index} 
+              className="relative group"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
               <img
                 src={URL.createObjectURL(file)}
                 alt={`Preview ${index + 1}`}
-                className="w-16 h-16 object-cover rounded border"
+                className="w-20 h-20 object-cover rounded-xl border-2 shadow-md"
+                style={{ borderColor: "var(--border-default)" }}
               />
-              <button
+              <motion.button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   removeFile(index);
                 }}
-                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
-                ×
-              </button>
-            </div>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </motion.button>
+            </motion.div>
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

@@ -60,10 +60,11 @@ const MisDashboard = () => {
       ]);
       const tickets = ticketRes.data;
       setStats({
-        total: tickets.length,
-        pending: tickets.filter((t) => t.status === "pending").length,
-        approved: tickets.filter((t) => t.status === "approved").length,
-        rejected: tickets.filter((t) => t.status === "rejected").length,
+        total: tickets?.length || 0,
+        pending: tickets?.filter((t) => t.status === "pending").length || 0,
+        approved: tickets?.filter((t) => t.status === "approved").length || 0,
+        rejected: tickets?.filter((t) => t.status === "rejected").length || 0,
+        closed: tickets?.filter((t) => t.status === "closed").length || 0,
       });
       const baseBranchStats = branchRes.data || [];
 
@@ -144,7 +145,7 @@ const MisDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
       ),
-      gradient: "from-blue-500 to-cyan-500",
+      gradient: "from-blue-500 to-blue-600",
       link: "/mis/tickets"
     },
     {
@@ -167,8 +168,19 @@ const MisDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      gradient: "from-emerald-500 to-green-500",
+      gradient: "from-indigo-500 to-blue-500",
       link: "/mis/tickets?status=approved"
+    },
+    {
+      label: "Closed",
+      value: stats.closed,
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      ),
+      gradient: "from-sky-500 to-cyan-500",
+      link: "/mis/tickets?status=closed"
     },
     {
       label: "Rejected",
@@ -286,7 +298,7 @@ const MisDashboard = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
       >
         {statCards.map((card, index) => (
           <motion.div key={card.label} variants={itemVariants}>
@@ -382,7 +394,7 @@ const MisDashboard = () => {
                       <span className="text-xs" style={{ color: "var(--text-muted)" }}>Total</span>
                     </div>
                     {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                      <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                         {branch.pending_tickets} Pending
                       </span>
                     )}
@@ -458,7 +470,7 @@ const MisDashboard = () => {
                       <span className="text-xs" style={{ color: "var(--text-muted)" }}>Total</span>
                     </div>
                     {(branch.pending_tickets || 0) > 0 && (
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
+                      <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-sm">
                         {branch.pending_tickets} Pending
                       </span>
                     )}

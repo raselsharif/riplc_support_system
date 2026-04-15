@@ -83,18 +83,27 @@ const ContactForm = () => {
   const content = (
     <div className="max-w-xl">
       <div className="mb-6">
-        <Link to={`${basePath}/contacts`} className="text-sm text-blue-600 hover:text-blue-700 mb-2 inline-flex items-center gap-1">
+        <Link to={`${basePath}/contacts`} className="text-sm font-medium mb-2 inline-flex items-center gap-2 hover:opacity-80 transition-opacity" style={{ color: "var(--primary)" }}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Back to Contacts
         </Link>
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-          {isEdit ? "Edit Contact" : "Add Contact"}
-        </h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">
-          {isEdit ? "Update the contact details below" : "Fill in the details to add a new contact"}
-        </p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+              {isEdit ? "Edit Contact" : "Add Contact"}
+            </h1>
+            <p className="text-sm text-[var(--text-muted)]">
+              {isEdit ? "Update the contact details below" : "Fill in the details to add a new contact"}
+            </p>
+          </div>
+        </div>
       </div>
 
       {fetching ? (
@@ -102,9 +111,9 @@ const ContactForm = () => {
           <span className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></span>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="rounded-xl border p-6 space-y-5" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
           <div>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -112,14 +121,15 @@ const ContactForm = () => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               placeholder="Full name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Phone <span className="text-red-500">*</span>
             </label>
             <input
@@ -127,14 +137,15 @@ const ContactForm = () => {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               placeholder="Phone number"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Email
             </label>
             <input
@@ -142,13 +153,14 @@ const ContactForm = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               placeholder="Email address (optional)"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Department <span className="text-red-500">*</span>
             </label>
             <input
@@ -156,21 +168,23 @@ const ContactForm = () => {
               name="department"
               value={form.department}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               placeholder="e.g. Claims, Underwriting, IT"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
               Branch <span className="text-red-500">*</span>
             </label>
             <select
               name="branch_id"
               value={form.branch_id}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
               required
             >
               <option value="">Select branch</option>
@@ -186,7 +200,8 @@ const ContactForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium shadow-lg shadow-blue-600/20"
+              className="flex-1 py-2.5 rounded-xl font-medium text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
+              style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -201,7 +216,8 @@ const ContactForm = () => {
             </button>
             <Link
               to={`${basePath}/contacts`}
-              className="px-6 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-[var(--text-secondary)] font-medium"
+              className="px-6 py-2.5 border rounded-xl font-medium transition-all hover:bg-[var(--bg-muted)]"
+              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
             >
               Cancel
             </Link>

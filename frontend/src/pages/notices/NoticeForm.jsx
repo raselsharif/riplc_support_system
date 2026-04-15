@@ -100,26 +100,34 @@ const NoticeForm = () => {
   return (
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {isEdit ? "Edit Notice" : "Create Notice"}
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {isEdit ? "Update the notice details below" : "Fill in the details to create a new notice"}
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isEdit ? "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" : "M12 4v16m8-8H4"} />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+              {isEdit ? "Edit Notice" : "Create Notice"}
+            </h1>
+            <p className="text-sm text-[var(--text-muted)]">
+              {isEdit ? "Update the notice details below" : "Fill in the details to create a new notice"}
+            </p>
+          </div>
         </div>
         <Link
           to="/notices"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all hover:bg-[var(--bg-muted)]"
+          style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-          Back to Notices
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-2xl w-full mx-auto">
+      <form onSubmit={handleSubmit} className="rounded-xl border p-6 max-w-2xl w-full mx-auto" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
         <div className="mb-5">
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+          <label className="block text-sm font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
             Heading <span className="text-red-500">*</span>
           </label>
           <input
@@ -128,12 +136,13 @@ const NoticeForm = () => {
             onChange={(e) => setHeading(e.target.value)}
             required
             placeholder="Enter notice heading"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+            className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+            style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
           />
         </div>
 
         <div className="mb-5">
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+          <label className="block text-sm font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
             Detail <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -142,13 +151,14 @@ const NoticeForm = () => {
             required
             rows={6}
             placeholder="Enter notice details"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow resize-y"
+            className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all resize-none"
+            style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-semibold mb-1.5" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
               Date <span className="text-red-500">*</span>
             </label>
             <input
@@ -156,12 +166,12 @@ const NoticeForm = () => {
               value={noticeDate}
               onChange={(e) => setNoticeDate(e.target.value)}
               required
-              className="w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--border-default)", color: "var(--text-primary)" }}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold mb-1.5" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
               Time <span className="text-red-500">*</span>
             </label>
             <input
@@ -169,30 +179,31 @@ const NoticeForm = () => {
               value={noticeTime}
               onChange={(e) => setNoticeTime(e.target.value)}
               required
-              className="w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--border-default)", color: "var(--text-primary)" }}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             />
           </div>
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 dark:text-slate-200 mb-1.5">
-            Attachment <span className="text-gray-400 dark:text-slate-400 font-normal">(optional, max 1 image)</span>
+          <label className="block text-sm font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
+            Attachment <span className="font-normal" style={{ color: "var(--text-muted)" }}>(optional, max 1 image)</span>
           </label>
           <UploadField onUpload={handleFileSelect} uploading={loading} />
           {(existingFile && !files.length) && (
-            <div className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-200 text-xs font-medium border border-green-200 dark:border-green-500/50">
+            <div className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: "var(--primary-light)", color: "var(--primary)" }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              Current file: {existingFile.name}
+              <span className="text-xs font-medium">Current file: {existingFile.name}</span>
             </div>
           )}
         </div>
 
-        <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-slate-800">
+        <div className="flex gap-3 pt-4 border-t" style={{ borderColor: "var(--border-light)" }}>
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium shadow-sm flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl font-medium text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 flex items-center gap-2"
+            style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
           >
             {loading ? (
               <>
@@ -203,7 +214,8 @@ const NoticeForm = () => {
           </button>
           <Link
             to="/notices"
-            className="px-6 py-2.5 rounded-lg font-medium transition-colors border border-gray-200 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            className="px-6 py-2.5 rounded-xl font-medium transition-all border hover:bg-[var(--bg-muted)]"
+            style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
           >
             Cancel
           </Link>

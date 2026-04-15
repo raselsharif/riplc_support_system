@@ -1,19 +1,17 @@
+import Button from './Button';
+
 const LoadMore = ({ onLoadMore, hasMore, loading }) => {
   if (!hasMore) return null;
 
   return (
     <div className="flex justify-center py-6">
-      <button
+      <Button
         onClick={onLoadMore}
-        disabled={loading}
-        className="px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
-        style={{ 
-          backgroundColor: "var(--primary)", 
-          color: "var(--text-inverse)" 
-        }}
+        loading={loading}
+        size="md"
       >
         {loading ? 'Loading...' : 'Show More'}
-      </button>
+      </Button>
     </div>
   );
 };

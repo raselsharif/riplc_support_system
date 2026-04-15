@@ -91,23 +91,32 @@ const BrandBarSettings = () => {
   return (
     <AdminLayout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Brand Settings</h1>
-        <p className="text-sm text-gray-500 mb-6">Configure the brand bar appearance across the application</p>
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Brand Settings</h1>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Configure the brand bar appearance across the application</p>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit} className="rounded-xl shadow-sm border p-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+        <form onSubmit={handleSubmit} className="rounded-xl border p-6 mt-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
           {/* Logo Preview */}
-        <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: "var(--bg-muted)", borderColor: "var(--border-default)" }}>
-            <p className="text-sm font-medium text-[var(--text-secondary)] mb-3">Preview</p>
+          <div className="mb-6 p-4 rounded-xl border" style={{ backgroundColor: "var(--bg-muted)", borderColor: "var(--border-default)" }}>
+            <p className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Preview</p>
             <div className="flex items-center gap-3">
               {logoPreview ? (
                 <img
                   src={logoPreview}
                   alt="Logo preview"
-                  className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                  className="w-12 h-12 rounded-xl object-cover flex-shrink-0 shadow-lg"
                   onError={(e) => { e.target.style.display = "none"; }}
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full text-white flex items-center justify-center font-extrabold flex-shrink-0" style={{ backgroundColor: "var(--primary)" }}>
+                <div className="w-12 h-12 rounded-xl text-white flex items-center justify-center font-bold flex-shrink-0 shadow-lg" style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}>
                   {companyName ? companyName.charAt(0).toUpperCase() : "R"}
                 </div>
               )}
@@ -120,11 +129,11 @@ const BrandBarSettings = () => {
 
           {/* Logo Upload */}
           <div className="mb-5">
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Logo Image</label>
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Logo Image</label>
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg cursor-pointer border transition-colors"
+              <label className="flex items-center gap-2 px-4 py-2.5 text-sm rounded-xl cursor-pointer border transition-all hover:shadow-md"
                 style={{ backgroundColor: "var(--bg-muted)", borderColor: "var(--border-default)", color: "var(--text-primary)" }}>
-                <svg className="w-4 h-4" style={{ color: "var(--text-secondary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="font-medium">Choose File</span>
@@ -142,46 +151,52 @@ const BrandBarSettings = () => {
                 <button
                   type="button"
                   onClick={handleRemoveLogo}
-                  className="text-sm text-red-600 hover:text-red-800 underline"
+                  className="text-sm font-medium hover:underline"
+                  style={{ color: "var(--error)" }}
                 >
                   Remove
                 </button>
               )}
             </div>
-            <p className="text-xs text-[var(--text-muted)] mt-1">PNG, JPG, GIF or WebP. Max 2MB.</p>
+            <p className="text-xs text-[var(--text-muted)] mt-2">PNG, JPG, GIF or WebP. Max 2MB.</p>
           </div>
 
           {/* Company Name */}
           <div className="mb-5">
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Company Name</label>
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Company Name</label>
             <input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="Republic Insurance"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-sm"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             />
           </div>
 
           {/* Subtitle */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Subtitle</label>
+            <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Subtitle</label>
             <input
               type="text"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
               placeholder="Support & IT Service Desk"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-sm"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+              className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm transition-all"
+              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
             />
           </div>
 
           {/* Weather Info */}
-          <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--border-default)" }}>
-            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Weather & Greeting</h2>
-            <p className="text-sm text-[var(--text-muted)]">
-              Weather is shown based on each user's detected location. Set your OpenWeatherMap API key in the <code className="px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: "var(--bg-muted)", color: "var(--text-primary)" }}>OPENWEATHER_API_KEY</code> environment variable.
+          <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--border-light)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+              </svg>
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Weather & Greeting</h2>
+            </div>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              Weather is shown based on each user's detected location. Set your OpenWeatherMap API key in the <code className="px-2 py-1 rounded text-xs font-mono" style={{ backgroundColor: "var(--bg-muted)", color: "var(--text-primary)" }}>OPENWEATHER_API_KEY</code> environment variable.
             </p>
           </div>
 
@@ -190,8 +205,8 @@ const BrandBarSettings = () => {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-colors"
-              style={{ backgroundColor: "var(--btn-primary-bg)", color: "var(--btn-primary-text)" }}
+              className="px-6 py-2.5 rounded-xl font-medium text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
+              style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
@@ -203,8 +218,8 @@ const BrandBarSettings = () => {
                 setCompanyName("");
                 setSubtitle("");
               }}
-              className="px-6 py-2 rounded-lg text-sm font-medium transition-colors"
-              style={{ backgroundColor: "var(--btn-secondary-bg)", color: "var(--btn-secondary-text)" }}
+              className="px-6 py-2.5 rounded-xl font-medium border transition-all hover:bg-[var(--bg-muted)]"
+              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
             >
               Reset
             </button>

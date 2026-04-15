@@ -29,8 +29,14 @@ const AnalyticsDashboard = () => {
     setLoading(true);
     try {
       const res = await api.get("/dashboard/analytics", { params: { days: period } });
-      setStats(res.data);
+      const data = res.data || {};
+      setStats({
+        ...data,
+        dailyTickets: data.dailyTickets || []
+      });
     } catch (error) {
+      console.error("Failed to fetch stats:", error);
+      setStats({ dailyTickets: [] });
     } finally {
       setLoading(false);
     }
@@ -46,9 +52,10 @@ const AnalyticsDashboard = () => {
     );
   }
 
-  if (!stats) return null;
+  if (!stats || !stats.dailyTickets) return null;
 
-  const maxVal = Math.max(...(stats.dailyTickets || []).map((d) => d.count), 1);
+  const dailyTicketsData = stats.dailyTickets || [];
+  const maxVal = Math.max(...dailyTicketsData.map((d) => d.count), 1);
 
   const summaryCards = [
     {
@@ -208,23 +215,30 @@ const AnalyticsDashboard = () => {
           </div>
           
           <div className="flex items-end gap-1 sm:gap-2 h-52">
-            {stats.dailyTickets?.map((day, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full relative flex items-end justify-center" style={{ height: "176px" }}>
-                  <motion.div
-                    initial={{ scaleY: 0 }}
-                    animate={{ scaleY: 1 }}
-                    transition={{ delay: i * 0.03, duration: 0.4, ease: "easeOut" }}
-                    style={{ originY: 1, height: `${(day.count / maxVal) * 100}%`, minHeight: day.count > 0 ? "4px" : "0" }}
-                    className="w-full max-w-[48px] rounded-t-lg transition-all hover:shadow-lg cursor-pointer"
-                    style={{
-                      background: `linear-gradient(180deg, #3b82f6 0%, #6366f1 100%)`
-                    }}
-                  />
-                </div>
-                <span className="text-[10px] text-gray-400 truncate w-full text-center">{day.date}</span>
+            {dailyTicketsData.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center h-full text-sm" style={{ color: "var(--text-muted)" }}>
+                No ticket data available
               </div>
-            ))}
+            ) : (
+              dailyTicketsData.map((day, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+<div className="w-full relative flex items-end justify-center" style={{ height: "176px" }}>
+                      <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: maxVal > 0 && day.count > 0 ? `${Math.max((day.count / maxVal) * 100, 2)}%` : "4px" }}
+                        transition={{ delay: i * 0.03, duration: 0.4, ease: "easeOut" }}
+                        className="w-full max-w-[48px] rounded-t-lg transition-all hover:shadow-lg cursor-pointer"
+                        style={{ 
+                          backgroundColor: "#2563eb",
+                          borderRadius: "4px 4px 0 0",
+                          minHeight: "4px"
+                        }}
+                      />
+                    </div>
+                  <span className="text-[10px] text-gray-400 truncate w-full text-center">{day.date}</span>
+                </div>
+              ))
+            )}
           </div>
         </motion.div>
 
