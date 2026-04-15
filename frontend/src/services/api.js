@@ -1,18 +1,14 @@
 import axios from "axios";
 
+const isProd = window.location.hostname !== "localhost" && !window.location.hostname.includes("127.0.0.1");
+const API_BASE = isProd ? "https://supportapi.riclbd.com/api" : "/api";
+
 const api = axios.create({
-  //   baseURL: "https://supportapi.riclbd.com/api",
-  baseURL: "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: API_BASE,
 });
 
 const publicApi = axios.create({
-  baseURL: "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: API_BASE,
 });
 
 api.interceptors.request.use((config) => {
@@ -20,6 +16,12 @@ api.interceptors.request.use((config) => {
   if (token && token !== "undefined" && token !== "null") {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Don't set Content-Type for FormData - let axios set it automatically
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+  
   return config;
 });
 
@@ -55,9 +57,7 @@ export const userService = {
   delete: (id) => api.delete(`/users/${id}`),
   changePassword: (id, data) => api.post(`/users/${id}/password`, data),
   uploadProfileImage: (id, formData) =>
-    api.post(`/users/${id}/profile-image`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
+    api.post(`/users/${id}/profile-image`, formData),
   getBranches: (id) => api.get(`/users/${id}/branches`),
   updateBranches: (id, data) => api.put(`/users/${id}/branches`, data),
 };
@@ -71,9 +71,7 @@ export const ticketService = {
   approve: (id, data) => api.post(`/tickets/${id}/approve`, data),
   reject: (id, data) => api.post(`/tickets/${id}/reject`, data),
   upload: (id, formData) =>
-    api.post(`/tickets/${id}/upload`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
+    api.post(`/tickets/${id}/upload`, formData),
   delete: (id) => api.delete(`/tickets/${id}`),
 };
 
@@ -86,13 +84,7 @@ export const messageService = {
   getContacts: () => api.get("/messages/contacts"),
   getThread: (userId) => api.get(`/messages/thread/${userId}`),
   send: (data) =>
-    api.post(
-      "/messages",
-      data,
-      data instanceof FormData
-        ? { headers: { "Content-Type": "multipart/form-data" } }
-        : undefined,
-    ),
+    api.post("/messages", data),
   markRead: (ids) => api.patch("/messages/read", { ids }),
   sendTyping: (data) => api.post("/messages/typing", data),
   getTypingStatus: (userId) => api.get(`/messages/typing/${userId}`),
@@ -109,19 +101,14 @@ export const lookupService = {
 
 export const noticeService = {
   getAll: (page = 1, limit = 9) => {
-    console.log("API call /notices with page:", page, "limit:", limit);
     return api.get("/notices", { params: { page, limit } });
   },
   getById: (id) => api.get(`/notices/${id}`),
   getLatest: () => api.get("/notices/latest"),
   create: (formData) =>
-    api.post("/notices", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
+    api.post("/notices", formData),
   update: (id, formData) =>
-    api.put(`/notices/${id}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
+    api.put(`/notices/${id}`, formData),
   delete: (id) => api.delete(`/notices/${id}`),
   getPopupSetting: () => api.get("/notices/popup-setting"),
   setPopupSetting: (enabled) => api.post("/notices/popup-setting", { enabled }),
@@ -130,9 +117,7 @@ export const noticeService = {
 export const brandbarService = {
   getSettings: () => publicApi.get("/brandbar"),
   updateSettings: (formData) =>
-    api.post("/brandbar", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
+    api.post("/brandbar", formData),
   getWeather: (params) => publicApi.get("/brandbar/weather", params),
 };
 

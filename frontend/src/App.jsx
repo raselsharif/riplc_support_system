@@ -1,10 +1,12 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { MenuProvider } from "./contexts/MenuContext";
 import LoadingSpinner from "./components/LoadingSpinner";
 import NoticePopup from "./components/NoticePopup";
 import BrandBar from "./components/BrandBar";
+import PageWrapper from "./components/PageWrapper";
+import { useEffect } from "react";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -78,6 +80,14 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const AppRoutes = () => {
   const { user, loading } = useAuth();
 
@@ -126,7 +136,7 @@ const AppRoutes = () => {
         path="/admin"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
+            <PageWrapper><AdminDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -134,7 +144,7 @@ const AppRoutes = () => {
         path="/admin/dashboard"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
+            <PageWrapper><AdminDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -142,7 +152,7 @@ const AppRoutes = () => {
         path="/admin/tickets"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminTickets />
+            <PageWrapper><AdminTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -150,7 +160,7 @@ const AppRoutes = () => {
         path="/admin/tickets/:id"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminTicketDetails />
+            <PageWrapper><AdminTicketDetails /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -158,7 +168,7 @@ const AppRoutes = () => {
         path="/admin/reports"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminReports />
+            <PageWrapper><AdminReports /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -166,7 +176,7 @@ const AppRoutes = () => {
         path="/admin/users"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <UsersList />
+            <PageWrapper><UsersList /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -174,7 +184,7 @@ const AppRoutes = () => {
         path="/admin/users/:id"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <AdminUserProfile />
+            <PageWrapper><AdminUserProfile /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -182,7 +192,7 @@ const AppRoutes = () => {
         path="/admin/branches"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <BranchList />
+            <PageWrapper><BranchList /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -190,7 +200,7 @@ const AppRoutes = () => {
         path="/admin/branches/:branchId"
         element={
           <ProtectedRoute allowedRoles={["admin", "mis", "underwriting", "it"]}>
-            <BranchTickets />
+            <PageWrapper><BranchTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -198,7 +208,7 @@ const AppRoutes = () => {
         path="/user"
         element={
           <ProtectedRoute allowedRoles={["user"]}>
-            <UserDashboard />
+            <PageWrapper><UserDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -206,7 +216,7 @@ const AppRoutes = () => {
         path="/user/dashboard"
         element={
           <ProtectedRoute allowedRoles={["user"]}>
-            <UserDashboard />
+            <PageWrapper><UserDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -214,7 +224,7 @@ const AppRoutes = () => {
         path="/user/tickets"
         element={
           <ProtectedRoute allowedRoles={["user"]}>
-            <MyTickets />
+            <PageWrapper><MyTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -222,7 +232,7 @@ const AppRoutes = () => {
         path="/user/tickets/create"
         element={
           <ProtectedRoute allowedRoles={["user"]}>
-            <CreateTicket />
+            <PageWrapper><CreateTicket /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -230,7 +240,7 @@ const AppRoutes = () => {
         path="/user/tickets/:id"
         element={
           <ProtectedRoute allowedRoles={["user"]}>
-            <UserTicketDetails />
+            <PageWrapper><UserTicketDetails /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -238,7 +248,7 @@ const AppRoutes = () => {
         path="/underwriting"
         element={
           <ProtectedRoute allowedRoles={["underwriting"]}>
-            <UnderwritingDashboard />
+            <PageWrapper><UnderwritingDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -246,7 +256,7 @@ const AppRoutes = () => {
         path="/underwriting/dashboard"
         element={
           <ProtectedRoute allowedRoles={["underwriting"]}>
-            <UnderwritingDashboard />
+            <PageWrapper><UnderwritingDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -254,7 +264,7 @@ const AppRoutes = () => {
         path="/underwriting/tickets"
         element={
           <ProtectedRoute allowedRoles={["underwriting"]}>
-            <UnderwritingTickets />
+            <PageWrapper><UnderwritingTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -262,7 +272,7 @@ const AppRoutes = () => {
         path="/underwriting/tickets/:id"
         element={
           <ProtectedRoute allowedRoles={["underwriting"]}>
-            <UnderwritingTicketDetails />
+            <PageWrapper><UnderwritingTicketDetails /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -270,7 +280,7 @@ const AppRoutes = () => {
         path="/mis"
         element={
           <ProtectedRoute allowedRoles={["mis"]}>
-            <MisDashboard />
+            <PageWrapper><MisDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -278,7 +288,7 @@ const AppRoutes = () => {
         path="/mis/dashboard"
         element={
           <ProtectedRoute allowedRoles={["mis"]}>
-            <MisDashboard />
+            <PageWrapper><MisDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -286,7 +296,7 @@ const AppRoutes = () => {
         path="/mis/tickets"
         element={
           <ProtectedRoute allowedRoles={["mis"]}>
-            <MisTickets />
+            <PageWrapper><MisTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -294,7 +304,7 @@ const AppRoutes = () => {
         path="/mis/tickets/:id"
         element={
           <ProtectedRoute allowedRoles={["mis"]}>
-            <MisTicketDetails />
+            <PageWrapper><MisTicketDetails /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -302,7 +312,7 @@ const AppRoutes = () => {
         path="/it/dashboard"
         element={
           <ProtectedRoute allowedRoles={["it"]}>
-            <ItDashboard />
+            <PageWrapper><ItDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -310,7 +320,7 @@ const AppRoutes = () => {
         path="/it/tickets"
         element={
           <ProtectedRoute allowedRoles={["it"]}>
-            <ItTickets />
+            <PageWrapper><ItTickets /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -318,7 +328,7 @@ const AppRoutes = () => {
         path="/it/tickets/:id"
         element={
           <ProtectedRoute allowedRoles={["it"]}>
-            <ItTicketDetails />
+            <PageWrapper><ItTicketDetails /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -326,7 +336,7 @@ const AppRoutes = () => {
         path="/it/users"
         element={
           <ProtectedRoute allowedRoles={["it"]}>
-            <ITUsers />
+            <PageWrapper><ITUsers /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -334,7 +344,7 @@ const AppRoutes = () => {
         path="/profile"
         element={
           <ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}>
-            <Profile />
+            <PageWrapper><Profile /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -342,7 +352,7 @@ const AppRoutes = () => {
         path="/messages"
         element={
           <ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}>
-            <Messages />
+            <PageWrapper><Messages /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -350,7 +360,7 @@ const AppRoutes = () => {
         path="/notices"
         element={
           <ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}>
-            <NoticeList />
+            <PageWrapper><NoticeList /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -358,7 +368,7 @@ const AppRoutes = () => {
         path="/notices/:id"
         element={
           <ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}>
-            <NoticeDetail />
+            <PageWrapper><NoticeDetail /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -366,7 +376,7 @@ const AppRoutes = () => {
         path="/notices/create"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <NoticeForm />
+            <PageWrapper><NoticeForm /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -374,7 +384,7 @@ const AppRoutes = () => {
         path="/notices/:id/edit"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <NoticeForm />
+            <PageWrapper><NoticeForm /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -382,7 +392,7 @@ const AppRoutes = () => {
         path="/notices/settings"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <NoticeSettings />
+            <PageWrapper><NoticeSettings /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -390,7 +400,7 @@ const AppRoutes = () => {
         path="/brandbar/settings"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <BrandBarSettings />
+            <PageWrapper><BrandBarSettings /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -398,7 +408,7 @@ const AppRoutes = () => {
         path="/admin/activity-logs"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <ActivityLogs />
+            <PageWrapper><ActivityLogs /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -406,7 +416,7 @@ const AppRoutes = () => {
         path="/admin/activity-logs/:id"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <ActivityLogDetail />
+            <PageWrapper><ActivityLogDetail /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -414,7 +424,7 @@ const AppRoutes = () => {
         path="/admin/analytics"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AnalyticsDashboard />
+            <PageWrapper><AnalyticsDashboard /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -422,7 +432,7 @@ const AppRoutes = () => {
         path="/admin/knowledge-base"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <KnowledgeBase />
+            <PageWrapper><KnowledgeBase /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -430,7 +440,7 @@ const AppRoutes = () => {
         path="/admin/knowledge-base/create"
         element={
           <ProtectedRoute allowedRoles={["admin", "it"]}>
-            <KnowledgeBaseForm />
+            <PageWrapper><KnowledgeBaseForm /></PageWrapper>
           </ProtectedRoute>
         }
       />
@@ -438,18 +448,18 @@ const AppRoutes = () => {
         path="/user/knowledge-base"
         element={
           <ProtectedRoute allowedRoles={["user", "admin", "it", "underwriting", "mis"]}>
-            <KnowledgeBase />
+            <PageWrapper><KnowledgeBase /></PageWrapper>
           </ProtectedRoute>
         }
       />
-      <Route path="/2fa" element={<ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}><TwoFactorSettings /></ProtectedRoute>} />
-      <Route path="/sessions" element={<ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}><SessionManagement /></ProtectedRoute>} />
-      <Route path="/admin/templates" element={<ProtectedRoute allowedRoles={["admin"]}><TicketTemplates /></ProtectedRoute>} />
-      <Route path="/admin/contacts" element={<ProtectedRoute allowedRoles={["admin"]}><ContactList /></ProtectedRoute>} />
-      <Route path="/user/contacts" element={<ProtectedRoute allowedRoles={["user"]}><ContactList /></ProtectedRoute>} />
-      <Route path="/underwriting/contacts" element={<ProtectedRoute allowedRoles={["underwriting"]}><ContactList /></ProtectedRoute>} />
-      <Route path="/mis/contacts" element={<ProtectedRoute allowedRoles={["mis"]}><ContactList /></ProtectedRoute>} />
-      <Route path="/it/contacts" element={<ProtectedRoute allowedRoles={["it"]}><ContactList /></ProtectedRoute>} />
+      <Route path="/2fa" element={<ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}><PageWrapper><TwoFactorSettings /></PageWrapper></ProtectedRoute>} />
+      <Route path="/sessions" element={<ProtectedRoute allowedRoles={["admin", "user", "it", "underwriting", "mis"]}><PageWrapper><SessionManagement /></PageWrapper></ProtectedRoute>} />
+      <Route path="/admin/templates" element={<ProtectedRoute allowedRoles={["admin"]}><PageWrapper><TicketTemplates /></PageWrapper></ProtectedRoute>} />
+      <Route path="/admin/contacts" element={<ProtectedRoute allowedRoles={["admin"]}><PageWrapper><ContactList /></PageWrapper></ProtectedRoute>} />
+      <Route path="/user/contacts" element={<ProtectedRoute allowedRoles={["user"]}><PageWrapper><ContactList /></PageWrapper></ProtectedRoute>} />
+      <Route path="/underwriting/contacts" element={<ProtectedRoute allowedRoles={["underwriting"]}><PageWrapper><ContactList /></PageWrapper></ProtectedRoute>} />
+      <Route path="/mis/contacts" element={<ProtectedRoute allowedRoles={["mis"]}><PageWrapper><ContactList /></PageWrapper></ProtectedRoute>} />
+      <Route path="/it/contacts" element={<ProtectedRoute allowedRoles={["it"]}><PageWrapper><ContactList /></PageWrapper></ProtectedRoute>} />
       <Route
         path="/"
         element={
@@ -477,6 +487,7 @@ const AppRoutes = () => {
 function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ScrollToTop />
       <AuthProvider>
         <ThemeProvider>
           <MenuProvider>
@@ -494,7 +505,9 @@ function AppWithPopup() {
   return (
     <>
       {user && <BrandBar />}
-      <AppRoutes />
+      <div className={user ? "flex-1" : ""}>
+        <AppRoutes />
+      </div>
       {user && <NoticePopup />}
     </>
   );

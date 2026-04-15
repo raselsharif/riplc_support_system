@@ -48,16 +48,18 @@ export const AuthProvider = ({ children }) => {
     return response.data.user;
   };
 
-  const logout = async () => {
+  const logout = async (triggerRedirect = true) => {
     try {
       await authService.logout();
     } catch (error) {
-      // even if API fails, ensure local session is cleared
       console.error("Logout failed, clearing client session anyway", error);
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
+      if (triggerRedirect) {
+        window.location.href = "/login";
+      }
     }
   };
 

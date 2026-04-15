@@ -38,9 +38,6 @@ class TicketController {
 
   static async getAll(req, res) {
     try {
-      console.log('=== TicketController getAll ===');
-      console.log('User:', req.user);
-      
       const { status, branch_id, branch_ids, date_from, date_to, search, problem_type, limit, offset } =
         req.query;
 
@@ -49,24 +46,17 @@ class TicketController {
         role: req.user.role,
       };
 
-      console.log('User role:', req.user.role);
-
       if (req.user.role === "admin" || req.user.role === "it") {
         delete filters.user_id;
-        console.log('Admin/IT - removed user_id');
       } else if (req.user.role === "underwriting" || req.user.role === "mis") {
         delete filters.user_id;
-        // Use problem_type for filtering
         filters.problem_type = req.user.role;
-        console.log('MIS/UW - set problem_type:', req.user.role);
       } else if (req.user.role === "user") {
         filters.user_id = req.user.id;
         if (branch_id) {
           filters.branch_id = parseInt(branch_id);
         }
       }
-
-      console.log('Final filters:', filters);
 
       if (status) {
         let statusArray = status;
@@ -189,27 +179,27 @@ class TicketController {
 
   static async upload(req, res) {
     try {
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: "No files uploaded" });
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
       }
 
       const ticketId = req.params.id;
       const uploadedBy = req.user.id;
 
-      for (const file of req.files) {
-        await AttachmentService.uploadFile({
-          ticketId,
-          uploadedBy,
-          file,
-          fileType: "image",
-        });
-      }
+      console.log("Upload request:", { ticketId, uploadedBy, file: req.file?.originalname, size: req.file?.size });
 
-      const attachments =
-        await AttachmentService.getAttachmentsByTicketId(ticketId);
+      const attachment = await AttachmentService.uploadFile({
+        ticketId,
+        uploadedBy,
+        file: req.file,
+        fileType: "image",
+      });
+
+      const attachments = await AttachmentService.getAttachmentsByTicketId(ticketId);
       res.status(201).json(attachments);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.error("Upload error:", error);
+      res.status(500).json({ message: error.message || "Upload failed" });
     }
   }
 }

@@ -19,16 +19,13 @@ class AuthController {
       const socketIp = req.socket?.remoteAddress || req.ip || null;
       const ip = realIp || socketIp || 'unknown';
       const ua = req.headers['user-agent'] || '';
-      console.log("Creating session:", { userId: result.user.id, ip, ua: ua.substring(0, 50) });
       try {
         const [insertResult] = await pool.execute(
           "INSERT INTO user_sessions (user_id, token, ip_address, user_agent) VALUES (?, ?, ?, ?)",
           [result.user.id, result.token, ip, ua]
         );
-        console.log("Session created, insertId:", insertResult.insertId);
       } catch (err) {
         console.error("Failed to create session record:", err.message);
-        console.error("SQL State:", err.sqlState);
       }
 
       ActivityLogService.log({

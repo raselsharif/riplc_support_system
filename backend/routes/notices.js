@@ -1,19 +1,32 @@
 const express = require("express");
+const multer = require("multer");
 const NoticeController = require("../controllers/NoticeController");
 const authMiddleware = require("../middleware/auth");
 const roleMiddleware = require("../middleware/role");
 const { validate, noticeSchema, popupSettingSchema } = require("../middleware/validation");
-const upload = require("../middleware/upload");
 const cloudinary = require("../config/cloudinary");
 
 const router = express.Router();
-
-router.use(authMiddleware);
 
 router.get("/", NoticeController.getAll);
 router.get("/latest", NoticeController.getLatest);
 router.get("/popup-setting", NoticeController.getPopupSetting);
 router.get("/:id", NoticeController.getById);
+
+router.use(authMiddleware);
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only images (JPG, PNG, GIF, WEBP) are allowed."), false);
+    }
+  }
+});
 
 const processFiles = async (req, res, next) => {
   try {

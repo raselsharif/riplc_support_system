@@ -1,7 +1,7 @@
-const MAX_WIDTH = 1200;
-const MAX_HEIGHT = 1200;
-const MAX_SIZE_KB = 500;
-const QUALITY = 0.8;
+const MAX_WIDTH = 800;
+const MAX_HEIGHT = 800;
+const MAX_SIZE_KB = 1500;
+const QUALITY = 0.7;
 
 export function compressImage(file, maxWidth = MAX_WIDTH, maxHeight = MAX_HEIGHT, quality = QUALITY) {
   return new Promise((resolve, reject) => {

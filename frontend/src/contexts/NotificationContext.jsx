@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const NotificationContext = createContext(null);
 
@@ -27,12 +27,6 @@ export const NotificationProvider = ({ children }) => {
 
     const fetchNotifications = async () => {
       try {
-        // Get fresh token
-        const token = localStorage.getItem('token');
-        if (!token) return;
-        
-        const headers = { Authorization: `Bearer ${token}` };
-        
         let params = new URLSearchParams();
         params.append('status', 'open,pending,approved');
         
@@ -46,25 +40,27 @@ export const NotificationProvider = ({ children }) => {
           params.append('department_id', 2);
         } else if (user.role === 'underwriting') {
           params.append('department_id', 3);
+        } else if (user.role === 'it') {
+          // IT sees all tickets
         }
 
-        const url = `/api/tickets?${params.toString()}`;
-        const res = await axios.get(url, { headers });
-        const items = Array.isArray(res.data) ? res.data : [];
+        const url = `/tickets?${params.toString()}`;
+        const res = await api.get(url);
+        const items = Array.isArray(res.data) ? res.data : (res.data.tickets || []);
         
         setCount(items.length);
         
         const newNotifs = items.slice(0, 10).map((t) => {
-          // Map role to correct path prefix - use full path
           let rolePath = '/admin';
           if (user.role === 'mis') rolePath = '/mis';
           else if (user.role === 'underwriting') rolePath = '/underwriting';
           else if (user.role === 'user') rolePath = '/user';
+          else if (user.role === 'it') rolePath = '/it';
           
           return {
             id: `ticket-${t.id}`,
             type: 'ticket',
-            message: `Ticket #${t.id}: ${t.title || 'New ticket'}`,
+            message: `Ticket #${t.ticket_number || t.id}: ${t.title || 'New ticket'}`,
             link: `${rolePath}/tickets/${t.id}`,
             created_at: t.created_at || Date.now(),
           };

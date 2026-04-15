@@ -6,6 +6,16 @@ import AdminLayout from "../layouts/AdminLayout";
 import UserLayout from "../layouts/UserLayout";
 import OfficerLayout from "../layouts/OfficerLayout";
 import ItLayout from "../layouts/ItLayout";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.06, duration: 0.3, ease: "easeOut" }
+  })
+};
 
 const KnowledgeBase = () => {
   const { user } = useAuth();
@@ -81,26 +91,30 @@ const KnowledgeBase = () => {
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => setSelectedArticle(null)}
-            className="mb-4 text-sm text-blue-600 hover:underline flex items-center gap-1"
+            className="mb-4 text-sm font-medium flex items-center gap-2 hover:opacity-80 transition-opacity"
+            style={{ color: "var(--primary)" }}
           >
-            ← Back to Knowledge Base
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Knowledge Base
           </button>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-2 py-0.5 bg-sky-100 text-sky-700 rounded-full text-xs font-medium dark:bg-sky-900/50 dark:text-sky-300">
+          <div className="rounded-xl border overflow-hidden" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+            <div className="px-6 py-5 border-b" style={{ borderColor: "var(--border-light)" }}>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={{ backgroundColor: "var(--primary-light)", color: "var(--primary)" }}>
                   {selectedArticle.category}
                 </span>
-                <span className="text-xs text-gray-400">{selectedArticle.views} views</span>
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>{selectedArticle.views} views</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">{selectedArticle.title}</h1>
+              <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>{selectedArticle.title}</h1>
             </div>
             <div className="p-6 prose max-w-none">
               {selectedArticle.content.split("\n").map((p, i) => (
-                <p key={i} className="text-gray-700 mb-3">{p}</p>
+                <p key={i} className="mb-3" style={{ color: "var(--text-secondary)" }}>{p}</p>
               ))}
             </div>
-            <div className="px-6 py-3 bg-gray-50 text-xs text-gray-400">
+            <div className="px-6 py-4 text-xs" style={{ backgroundColor: "var(--bg-muted)", color: "var(--text-muted)" }}>
               Last updated: {new Date(selectedArticle.updated_at).toLocaleDateString()}
             </div>
           </div>
@@ -113,14 +127,22 @@ const KnowledgeBase = () => {
     <Layout>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Knowledge Base</h1>
-            <p className="text-sm text-gray-500">Find answers to common questions</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-[var(--text-primary)]">Knowledge Base</h1>
+              <p className="text-sm text-[var(--text-muted)]">Find answers to common questions</p>
+            </div>
           </div>
           {isAdmin && (
             <Link
               to="/admin/knowledge-base/create"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white shadow-lg shadow-blue-600/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
+              style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
             >
               + New Article
             </Link>
@@ -128,20 +150,26 @@ const KnowledgeBase = () => {
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+        <div className="rounded-xl border p-4 mb-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
           <div className="flex gap-3">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              placeholder="Search articles..."
-              className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
-            />
+            <div className="flex-1 relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                placeholder="Search articles..."
+                className="w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+                style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)", "--tw-ring-color": "var(--primary)" }}
+              />
+            </div>
             <button
               onClick={handleSearch}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+              className="px-5 py-2.5 rounded-xl font-medium text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5"
+              style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }}
             >
               Search
             </button>
@@ -154,11 +182,15 @@ const KnowledgeBase = () => {
             <button
               key={cat}
               onClick={() => setCategory(cat === "All" ? "" : cat)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 (category === cat || (!category && cat === "All"))
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "text-white shadow-lg"
+                  : "hover:shadow-md"
               }`}
+              style={category === cat || (!category && cat === "All")
+                ? { background: "linear-gradient(135deg, var(--primary), var(--primary-active))" }
+                : { backgroundColor: "var(--bg-secondary)", color: "var(--text-secondary)", borderColor: "var(--border-default)", border: "1px solid" }
+              }
             >
               {cat}
             </button>
@@ -171,36 +203,47 @@ const KnowledgeBase = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         ) : filteredArticles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center text-gray-500">
-            <p className="text-lg mb-2">No articles found</p>
+          <div className="rounded-xl border p-12 text-center" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <p className="text-lg mb-2 text-[var(--text-secondary)]">No articles found</p>
             {isAdmin && (
-              <Link to="/admin/knowledge-base/create" className="text-blue-600 hover:underline">
+              <Link to="/admin/knowledge-base/create" className="text-[var(--primary)] hover:underline font-medium">
                 Create the first article
               </Link>
             )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredArticles.map((article) => (
-              <button
+            {filteredArticles.map((article, i) => (
+              <motion.button
                 key={article.id}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
                 onClick={() => handleView(article)}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-left hover:shadow-md hover:border-blue-200 transition-all group"
+                className="rounded-xl border p-5 text-left hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden"
+                style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}
               >
-                <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                <div className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(90deg, var(--primary), var(--primary-active))" }} />
+                <span className="inline-block px-2.5 py-1 rounded-lg text-xs font-medium" style={{ backgroundColor: "var(--bg-muted)", color: "var(--primary)" }}>
                   {article.category}
                 </span>
-                <h3 className="text-base font-semibold text-gray-900 mt-3 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 className="text-base font-semibold mt-3 mb-2 line-clamp-2 transition-colors" style={{ color: "var(--text-primary)" }} onMouseEnter={(e) => e.currentTarget.style.color = "var(--primary)"} onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-primary)"}>
                   {article.title}
                 </h3>
-                <p className="text-sm text-gray-500 line-clamp-2 mb-3">
+                <p className="text-sm line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
                   {article.content.substring(0, 100)}...
                 </p>
-                <div className="flex items-center justify-between text-xs text-gray-400">
+                <div className="flex items-center justify-between text-xs pt-3 border-t" style={{ borderColor: "var(--border-light)", color: "var(--text-muted)" }}>
                   <span>{article.views} views</span>
                   <span>{new Date(article.updated_at).toLocaleDateString()}</span>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
         )}

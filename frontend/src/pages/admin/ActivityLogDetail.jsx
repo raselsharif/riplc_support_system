@@ -55,36 +55,43 @@ const ActivityLogDetail = () => {
   return (
     <AdminLayout>
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Activity Detail</h1>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>ID #{id}</p>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, var(--primary-light), var(--primary))" }}>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-[var(--text-primary)]">Activity Detail</h1>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>ID #{id}</p>
+            </div>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="px-3 py-2 text-sm border rounded-lg transition-colors"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+              className="px-4 py-2 text-sm font-medium rounded-xl border transition-all hover:bg-[var(--bg-muted)]"
+              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
             >
               Back
             </button>
             <Link
               to="/admin/activity-logs"
-              className="px-3 py-2 text-sm border rounded-lg transition-colors"
-              style={{ backgroundColor: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
+              className="px-4 py-2 text-sm font-medium rounded-xl border transition-all hover:bg-[var(--bg-muted)]"
+              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
             >
               All Activity
             </Link>
           </div>
         </div>
 
-        <div className="rounded-xl shadow-sm border p-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
+        <div className="rounded-xl border p-6" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-default)" }}>
           {loading ? (
             <div className="flex justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
           ) : error ? (
-            <p className="text-red-500 text-sm">{error}</p>
+            <p className="text-sm font-medium" style={{ color: "var(--error)" }}>{error}</p>
           ) : !log ? (
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>Not found</p>
           ) : (

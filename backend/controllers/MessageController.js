@@ -62,13 +62,9 @@ class MessageController {
   static async typing(req, res) {
     try {
       const { to_user_id, is_typing } = req.body;
-      console.log(
-        `Typing request: ${req.user.id} -> ${to_user_id}, is_typing: ${is_typing}`,
-      );
       TypingService.setTyping(req.user.id, Number(to_user_id), !!is_typing);
       res.json({ message: "ok" });
     } catch (err) {
-      console.error("Typing error:", err);
       res.status(500).json({ message: err.message });
     }
   }
@@ -77,12 +73,8 @@ class MessageController {
     try {
       const otherId = Number(req.params.userId);
       const typing = TypingService.isTyping(otherId, req.user.id);
-      console.log(
-        `Typing status check: ${otherId} -> ${req.user.id}, result: ${typing}`,
-      );
       res.json({ user_id: otherId, is_typing: typing });
     } catch (err) {
-      console.error("Typing status error:", err);
       res.status(500).json({ message: err.message });
     }
   }

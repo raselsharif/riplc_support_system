@@ -5,6 +5,7 @@
 :root {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
+  --chat-bg: #f1f5f9;
   --bg-muted: #f1f5f9;
   --bg-hover: #e2e8f0;
   --bg-active: #cbd5f5;
@@ -46,6 +47,7 @@
 .theme-blue {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
+  --chat-bg: #f1f5f9;
   --bg-muted: #f1f5f9;
   --text-primary: #0f172a;
   --text-secondary: #334155;
@@ -60,6 +62,7 @@
 .theme-green {
   --bg-primary: #f0fdf4;
   --bg-secondary: #ffffff;
+  --chat-bg: #dcfce7;
   --bg-muted: #dcfce7;
   --text-primary: #14532d;
   --text-secondary: #166534;
@@ -74,6 +77,7 @@
 .theme-purple {
   --bg-primary: #faf5ff;
   --bg-secondary: #ffffff;
+  --chat-bg: #f3e8ff;
   --bg-muted: #f3e8ff;
   --text-primary: #581c87;
   --text-secondary: #6b21a8;
@@ -88,6 +92,7 @@
 .theme-orange {
   --bg-primary: #fff7ed;
   --bg-secondary: #ffffff;
+  --chat-bg: #ffedd5;
   --bg-muted: #ffedd5;
   --text-primary: #7c2d12;
   --text-secondary: #9a3412;
@@ -102,6 +107,7 @@
 .theme-dark {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
+  --chat-bg: #0f172a;
   --bg-muted: #334155;
   --bg-hover: #475569;
   --text-primary: #f8fafc;
@@ -192,6 +198,30 @@
 .theme-dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #475569 !important; }
 .theme-dark .divide-x > :not([hidden]) ~ :not([hidden]) { border-color: #475569 !important; }
 
+/* Browser autocomplete fix for all themes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--input-bg) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autocomplete */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+}
+
 /* Input styles for dark theme */
 .theme-dark input,
 .theme-dark select,
@@ -209,6 +239,30 @@
 
 .theme-dark button {
   border-color: var(--border-default) !important;
+}
+
+/* Fix browser autocomplete background color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: var(--input-bg) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autocomplete */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
 }
 
 /* Date and Time Input Styles */
@@ -514,4 +568,47 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Button Animations */
+button, 
+.btn,
+[role="button"],
+a.btn,
+input[type="submit"],
+input[type="button"],
+button[type="submit"],
+button[type="button"] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover:not(:disabled), 
+.btn:hover:not(:disabled),
+[role="button"]:hover:not(:disabled),
+a.btn:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled),
+input[type="button"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled), 
+.btn:active:not(:disabled),
+[role="button"]:active:not(:disabled),
+a.btn:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+input[type="button"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Link Animations */
+a:not(.no-animation) {
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+a:not(.no-animation):hover {
+  transform: translateX(2px);
+}
+
+a:not(.no-animation):active {
+  transform: translateX(2px) scale(0.98);
 }
