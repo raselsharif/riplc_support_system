@@ -25,17 +25,73 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
+    }
+  });
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+
     if (
       error.response?.status === 401 &&
       !error.config.url.includes("/auth/login") &&
-      !error.config.url.includes("/brandbar")
+      !error.config.url.includes("/auth/refresh") &&
+      !error.config.url.includes("/brandbar") &&
+      !originalRequest._retry
     ) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => api(originalRequest))
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      try {
+        const response = await api.post("/auth/refresh", { refreshToken });
+        const { token, refreshToken: newRefreshToken } = response.data;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", newRefreshToken);
+
+        processQueue(null);
+        isRefreshing = false;
+
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError);
+        isRefreshing = false;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   },
@@ -44,6 +100,7 @@ api.interceptors.response.use(
 export const authService = {
   login: (data) => api.post("/auth/login", data),
   register: (data) => api.post("/auth/register", data),
+  refresh: (refreshToken) => api.post("/auth/refresh", { refreshToken }),
   changePassword: (data) => api.post("/auth/change-password", data),
   logout: () => api.post("/auth/logout"),
 };

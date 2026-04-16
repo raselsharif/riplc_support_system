@@ -10,8 +10,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-    
-    if (storedUser && token && token !== "undefined" && token !== "null" && token !== "null") {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (storedUser && token && refreshToken && token !== "undefined" && token !== "null" && refreshToken !== "undefined") {
       try {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser && parsedUser.id) {
@@ -19,20 +20,24 @@ export const AuthProvider = ({ children }) => {
         } else {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
+          localStorage.removeItem('refreshToken');
         }
       } catch (e) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
       }
     } else {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('refreshToken');
     }
     setLoading(false);
   }, []);
 
-  const login = (userData, token) => {
+  const login = (userData, token, refreshToken) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', refreshToken || '');
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
@@ -56,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('refreshToken');
       setUser(null);
       if (triggerRedirect) {
         window.location.href = "/login";

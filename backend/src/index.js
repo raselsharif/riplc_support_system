@@ -29,7 +29,8 @@ const corsOptions = {
     const allowedOrigins = [
       'https://support.riclbd.com',
       'http://localhost:3000',
-      'http://localhost:5173'
+      'http://localhost:5173',
+      'exp://localhost:8081'
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
