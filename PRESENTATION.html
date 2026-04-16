@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Management System - Presentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 35px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .slide.active { opacity: 1; visibility: visible; }
+        
+        .slide h1 {
+            font-size: 3.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
+        }
+        
+        .slide h2 {
+            font-size: 2.8rem;
+            margin-bottom: 18px;
+            color: #ffffff;
+        }
+        
+        .slide h3 {
+            font-size: 1.6rem;
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+        
+        .slide h4 {
+            font-size: 1.3rem;
+            color: #fbbf24;
+            margin-bottom: 12px;
+        }
+        
+        .slide p {
+            font-size: 1.4rem;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .slide ul { list-style: none; text-align: left; }
+        
+        .slide li {
+            font-size: 1.25rem;
+            color: #e2e8f0;
+            margin-bottom: 10px;
+            padding-left: 28px;
+            position: relative;
+        }
+        
+        .slide li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-size: 1.2rem;
+        }
+        
+        .slide .subtitle {
+            font-size: 1.7rem;
+            color: #60a5fa;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 55%;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 2px solid #334155;
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+        
+        th { background: #1d4ed8; color: #ffffff; }
+        td { background: #1e293b; color: #e2e8f0; }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 82%;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            width: 85%;
+        }
+        
+        .code-block {
+            background: #0c1222;
+            padding: 16px 22px;
+            border-radius: 10px;
+            font-family: monospace;
+            color: #7dd3fc;
+            font-size: 1.1rem;
+            width: 58%;
+            border: 1px solid #1e3a5f;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .nav button {
+            padding: 12px 22px;
+            font-size: 1.1rem;
+            background: #1d4ed8;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .nav button:hover { background: #1e40af; transform: scale(1.08); }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .slide-title {
+            font-size: 1rem;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(29, 78, 216, 0.2), rgba(124, 58, 237, 0.15));
+            border: 2px solid #3b82f6;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin: 14px 0;
+        }
+        
+        .checklist li::before { content: "✓"; color: #4ade80; }
+        .bullet-list li::before { content: "•"; color: #fbbf24; }
+        .featurename li::before { content: "★"; color: #fbbf24; }
+        
+        .single-image {
+            width: 80%;
+            max-height: 55vh;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 3px solid #334155;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .image-label {
+            color: #60a5fa;
+            font-size: 1.3rem;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+        
+        .feature-desc {
+            background: rgba(30, 41, 59, 0.8);
+            border-left: 4px solid #3b82f6;
+            padding: 20px 30px;
+            border-radius: 0 12px 12px 0;
+            width: 75%;
+            text-align: left;
+        }
+        
+        .feature-desc li {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #e2e8f0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide.active h1, .slide.active h2, .slide.active p { animation: fadeIn 0.8s ease; }
+    </style>
+</head>
+<body>
+    <div class="slides-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <p class="slide-title">Project Presentation</p>
+            <h1 class="gradient-text">Support Management System</h1>
+            <p class="subtitle">Multi-Department Ticket Management with Workflow Automation</p>
+            <p style="margin-top: 25px; color: #94a3b8;">Built with React & Node.js</p>
+        </div>
+        
+        <!-- Slide 2: Login - Image -->
+        <div class="slide">
+            <h2>Feature 1: Login Page</h2>
+            <img src="screenshots/login.png" alt="Login" class="single-image">
+            <p class="image-label">Multi-Theme Login Authentication</p>
+        </div>
+        
+        <!-- Slide 3: Login - Description -->
+        <div class="slide">
+            <h2>Feature 1: Login Page</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Secure JWT-based authentication</li>
+                    <li>5 color themes (Blue, Green, Purple, Orange, Dark)</li>
+                    <li>Remember me functionality</li>
+                    <li>Demo credentials for all user roles</li>
+                    <li>Responsive design for all screen sizes</li>
+                    <li>Animated transitions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 4: User Dashboard - Image -->
+        <div class="slide">
+            <h2>Feature 2: User Dashboard</h2>
+            <img src="screenshots/user-dashboard.png" alt="User Dashboard" class="single-image">
+            <p class="image-label">Stat Cards with Theme Colors</p>
+        </div>
+        
+        <!-- Slide 5: User Dashboard - Description -->
+        <div class="slide">
+            <h2>Feature 2: User Dashboard</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>5 stat cards (Total, Open, Pending, Approved, Closed)</li>
+                    <li>Theme-aware color coding</li>
+                    <li>Recent tickets list</li>
+                    <li>Quick create ticket button</li>
+                    <li>Real-time polling updates</li>
+                    <li>Responsive grid layout</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Create Ticket - Image -->
+        <div class="slide">
+            <h2>Feature 3: Create Ticket</h2>
+            <img src="screenshots/create-ticket.png" alt="Create Ticket" class="single-image">
+            <p class="image-label">Multi-Step Form with Preview</p>
+        </div>
+        
+        <!-- Slide 7: Create Ticket - Description -->
+        <div class="slide">
+            <h2>Feature 3: Create Ticket</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Department selection (IT, UW, MIS)</li>
+                    <li>Priority levels (Low, Medium, High, Urgent)</li>
+                    <li>File attachment uploads</li>
+                    <li>File preview before submit</li>
+                    <li>Form validation</li>
+                    <li>Branch selection dropdown</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Ticket Details - Image -->
+        <div class="slide">
+            <h2>Feature 4: Ticket Details</h2>
+            <img src="screenshots/ticket-details.png" alt="Ticket Details" class="single-image">
+            <p class="image-label">Conversation & Message Thread</p>
+        </div>
+        
+        <!-- Slide 9: Ticket Details - Description -->
+        <div class="slide">
+            <h2>Feature 4: Ticket Details</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Real-time message thread</li>
+                    <li>Internal notes (staff only)</li>
+                    <li>File attachments preview</li>
+                    <li>Status timeline history</li>
+                    <li>Reply with file upload</li>
+                    <li>Theme-aware bubble colors</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 10: Admin Dashboard - Image -->
+        <div class="slide">
+            <h2>Feature 5: Admin Dashboard</h2>
+            <img src="screenshots/admin-dashboard.png" alt="Admin Dashboard" class="single-image">
+            <p class="image-label">6 Stat Cards Overview</p>
+        </div>
+        
+        <!-- Slide 11: Admin Dashboard - Description -->
+        <div class="slide">
+            <h2>Feature 5: Admin Dashboard</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>6 stat cards in one row (big screens)</li>
+                    <li>Total, Open, Pending, Approved, Rejected, Closed</li>
+                    <li>Color-coded by status</li>
+                    <li>Animated number counters</li>
+                    <li>Click to filter tickets</li>
+                    <li>Alert indicators for pending</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 12: Analytics - Image -->
+        <div class="slide">
+            <h2>Feature 6: Analytics</h2>
+            <img src="screenshots/analytics.png" alt="Analytics" class="single-image">
+            <p class="image-label">Charts & Visualizations</p>
+        </div>
+        
+        <!-- Slide 13: Analytics - Description -->
+        <div class="slide">
+            <h2>Feature 6: Analytics</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Daily ticket volume bar chart</li>
+                    <li>Department breakdown</li>
+                    <li>Priority levels distribution</li>
+                    <li>Time period filters (7, 30, 90 days)</li>
+                    <li>Animated chart bars</li>
+                    <li>Peak ticket indicators</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 14: Users List - Image -->
+        <div class="slide">
+            <h2>Feature 7: User Management</h2>
+            <img src="screenshots/users-list.png" alt="Users List" class="single-image">
+            <p class="image-label">User CRUD Operations</p>
+        </div>
+        
+        <!-- Slide 15: Users List - Description -->
+        <div class="slide">
+            <h2>Feature 7: User Management</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>User list with search</li>
+                    <li>Filter by role, branch, status</li>
+                    <li>Add new users</li>
+                    <li>Edit user details</li>
+                    <li>Activate/deactivate users</li>
+                    <li>Branch assignment</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 16: Tickets List - Image -->
+        <div class="slide">
+            <h2>Feature 8: Tickets List</h2>
+            <img src="screenshots/tickets-list.png" alt="Tickets List" class="single-image">
+            <p class="image-label">Filterable Table</p>
+        </div>
+        
+        <!-- Slide 17: Tickets List - Description -->
+        <div class="slide">
+            <h2>Feature 8: Tickets List</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Filter by status</li>
+                    <li>Filter by department</li>
+                    <li>Filter by priority</li>
+                    <li>Filter by branch</li>
+                    <li>Search by title</li>
+                    <li>Sort by date, priority</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 18: Image Preview - Additional Feature -->
+        <div class="slide">
+            <h2>Feature 9: Image Preview</h2>
+            <div class="feature-desc" style="width: 70%; text-align: center; padding: 30px;">
+                <h4 style="color: #60a5fa; margin-bottom: 20px;">Multi-Image Navigation</h4>
+                <img src="screenshots/ticket-details.png" alt="Image Preview" style="width: 60%; border-radius: 10px; border: 2px solid #334155;">
+            </div>
+        </div>
+        
+        <!-- Slide 19: Image Preview - Description -->
+        <div class="slide">
+            <h2>Feature 9: Image Preview</h2>
+            <div class="feature-desc">
+                <h4>Key Features:</h4>
+                <ul class="checklist">
+                    <li>Multiple image navigation</li>
+                    <li>Next/Previous buttons</li>
+                    <li>Keyboard navigation (← → keys)</li>
+                    <li>Escape to close</li>
+                    <li>Image counter display</li>
+                    <li>Smooth transitions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 20: Additional Features Info -->
+        <div class="slide">
+            <h2>Feature 10: More Features</h2>
+            <div class="three-column">
+                <div class="highlight-box">
+                    <h4>Theme Support</h4>
+                    <ul class="checklist">
+                        <li>5 Themes</li>
+                        <li>Dark Mode</li>
+                        <li>CSS Variables</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h4>Sidebar</h4>
+                    <ul class="checklist">
+                        <li>Collapsible</li>
+                        <li>Role-based</li>
+                        <li>Quick Links</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h4>Notifications</h4>
+                    <ul class="checklist">
+                        <li>Toast Alerts</li>
+                        <li>Real-time</li>
+                        <li>Status Updates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 21: Tech Stack -->
+        <div class="slide">
+            <h2>Technology Stack</h2>
+            <div class="two-column">
+                <div class="highlight-box">
+                    <h3>Frontend</h3>
+                    <ul>
+                        <li>React 18 + Vite</li>
+                        <li>Tailwind CSS</li>
+                        <li>Framer Motion</li>
+                        <li>React Router v6</li>
+                        <li>Axios</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h3>Backend</h3>
+                    <ul>
+                        <li>Node.js + Express</li>
+                        <li>JWT Auth</li>
+                        <li>Zod Validation</li>
+                        <li>Multer + Cloudinary</li>
+                        <li>MySQL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 22: User Roles -->
+        <div class="slide">
+            <h2>User Roles</h2>
+            <table>
+                <tr><th>Role</th><th>Access</th></tr>
+                <tr><td>Admin</td><td>Full access, user management</td></tr>
+                <tr><td>User</td><td>Create/view own tickets</td></tr>
+                <tr><td>IT</td><td>Handle IT tickets</td></tr>
+                <tr><td>Underwriting</td><td>Approve UW tickets</td></tr>
+                <tr><td>MIS</td><td>Approve MIS tickets</td></tr>
+            </table>
+        </div>
+        
+        <!-- Slide 23: Workflow -->
+        <div class="slide">
+            <h2>Ticket Workflow</h2>
+            <div class="feature-desc">
+                <ul class="featurename">
+                    <li>User creates ticket with department</li>
+                    <li>Direct IT goes to IT queue</li>
+                    <li>UW/MIS requires approval</li>
+                    <li>Approved → IT for processing</li>
+                    <li>Rejected → Closed</li>
+                    <li>IT resolves → Closed</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 24: Getting Started -->
+        <div class="slide">
+            <h2>Getting Started</h2>
+            <div class="code-block">
+                <p># Backend</p>
+                <p style="color: #64748b;">cd backend && npm install && npm run dev</p>
+                <br>
+                <p># Frontend</p>
+                <p style="color: #64748b;">cd frontend && npm install && npm run dev</p>
+            </div>
+            <p style="margin-top: 22px; color: #94a3b8;">Open: http://localhost:5173</p>
+        </div>
+        
+        <!-- Slide 25: Demo Credentials -->
+        <div class="slide">
+            <h2>Demo Credentials</h2>
+            <table>
+                <tr><th>Role</th><th>Username</th><th>Password</th></tr>
+                <tr><td>Admin</td><td>admin</td><td>admin123</td></tr>
+                <tr><td>User</td><td>user</td><td>user123</td></tr>
+                <tr><td>IT</td><td>it</td><td>it123</td></tr>
+                <tr><td>Underwriting</td><td>underwriting</td><td>underwriting123</td></tr>
+                <tr><td>MIS</td><td>mis</td><td>mis123</td></tr>
+            </table>
+        </div>
+        
+        <!-- Slide 26: Future Enhancements -->
+        <div class="slide">
+            <h2>Future Enhancements</h2>
+            <ul class="bullet-list">
+                <li>Email Notifications</li>
+                <li>Mobile App</li>
+                <li>Knowledge Base</li>
+                <li>SLA Tracking</li>
+                <li>Report Exports</li>
+                <li>Advanced Audit Logs</li>
+                <li>Chat Integration</li>
+                <li>Slack Integration</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 27: Thank You -->
+        <div class="slide">
+            <h1 class="gradient-text" style="font-size: 4rem;">Thank You!</h1>
+            <p class="subtitle" style="margin-top: 25px;">Questions?</p>
+            <p style="margin-top: 40px; color: #94a3b8;">Support Management System</p>
+            <p style="color: #475569;">Built with React & Node.js</p>
+        </div>
+    </div>
+    
+    <div class="nav">
+        <button onclick="prevSlide()">← Previous</button>
+        <button onclick="nextSlide()">Next →</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">27</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) slide.classList.add('active');
+            });
+            document.getElementById('currentSlide').textContent = index + 1;
+            currentSlide = index;
+        }
+        
+        function nextSlide() { if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1); }
+        function prevSlide() { if (currentSlide > 0) showSlide(currentSlide - 1); }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            else if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

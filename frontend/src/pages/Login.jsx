@@ -63,7 +63,7 @@ const Login = () => {
 
     try {
       const response = await authService.login({ username, password });
-      login(response.data.user, response.data.token);
+      login(response.data.user, response.data.token, response.data.refreshToken);
       addToast({ type: "success", message: "Signed in successfully" });
 
       const roleRoutes = {

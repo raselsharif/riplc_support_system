@@ -44,6 +44,21 @@ class AuthController {
     }
   }
 
+  static async refresh(req, res) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ message: 'Refresh token is required' });
+      }
+
+      const result = await AuthService.refresh(refreshToken);
+      res.json(result);
+    } catch (error) {
+      res.status(401).json({ message: error.message });
+    }
+  }
+
   static async register(req, res) {
     try {
       const { name, username, email, password, branch_id, branch_ids } = req.body;
@@ -71,6 +86,8 @@ class AuthController {
         department_id: user.department_id
       });
 
+      const refreshToken = await AuthService.generateRefreshToken(user.id);
+
       res.status(201).json({
         user: {
           id: user.id,
@@ -86,7 +103,8 @@ class AuthController {
           department_name: user.department_name,
           profile_image_url: user.profile_image_url
         },
-        token
+        token,
+        refreshToken
       });
     } catch (error) {
       const status = error.message === 'Email already registered' ? 409 : 500;
